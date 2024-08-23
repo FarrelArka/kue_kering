@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Register</title>
+        <link rel="stylesheet" href="login.css">
+    </head>
+    <body>
+        <div class="register-container">
+            <div class="form-wrapper">
+                <!-- Step 1: Basic Information -->
+                <div class="form-step form-step-active" id="step-1">
+                    <div class="register-header">
+                        <h2>Log in Your Account</h2>
+                    </div>
+                    <form class="register-form" action="proses_login.php" method="post" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <label for="">Username</label>
+                            <input type="text" id="username" name="username" placeholder="Username" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="">Password</label>
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="">Confirm Password</label>
+                            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+                        </div>
+
+                        <button type="submit" name="submit" class="register-button">Sign Up</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function goToNextStep() {
+            const step1 = document.getElementById('step-1');
+            const step2 = document.getElementById('step-2');
+            step1.classList.remove('form-step-active');
+            step2.classList.add('form-step-active');
+        }
+    </script>
+    </body>
+</html>
