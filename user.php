@@ -49,11 +49,11 @@ if ($data = $result->fetch_assoc()) {
         </div>
 
         <nav class="navbar">
-        <a href="user.php">Home</a>
-            <a href="product.php">Product</a>
-            <a href="cart.php">Cart</a>
-            <a href="#">Order</a>
-            <a href="#contact">Contact</a>
+        <a href="user.php">Berada</a>
+            <a href="product.php">Produk</a>
+            <a href="cart.php">Keranjang</a>
+            <a href="#">Pesan</a>
+            <a href="#contact">Hubungi</a>
         </nav>
 
         
@@ -75,10 +75,10 @@ if ($data = $result->fetch_assoc()) {
     <!-- Home Section -->
     <section class="home" id="home">
         <div class="homeContent">
-            <h2>Delicious Cookies for Everyone</h2>
+            <h2>Kue Enak Untuk Semuanya</h2>
             <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
             <div class="home-btn">
-                <a href="#"><button>See More</button></a>
+                <a href="#"><button>Lihat Selengkapnya</button></a>
             </div>
         </div>
     </section>
@@ -86,7 +86,7 @@ if ($data = $result->fetch_assoc()) {
     <!-- Product Section -->
     <section class="product" id="product">
             <div class="heading">
-                <h2>Our Exclusive Products</h2>
+                <h2>Produk yang sedang Ekslusif</h2>
             </div>
             <div class="swiper product-row">
                 <div class="swiper-wrapper">
@@ -101,7 +101,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -182,7 +182,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -197,7 +197,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -212,7 +212,7 @@ if ($data = $result->fetch_assoc()) {
                                 assumenda.
                             </p>
                             <div class="orderNow">
-                                <button>Order Now </button>
+                                <button>Pesan Sekarang </button>
                             </div>
                         </div>
                     </div>
@@ -223,7 +223,7 @@ if ($data = $result->fetch_assoc()) {
         </section>
     <!-- About Section -->
     <section class="about">
-        <h2>About</h2>
+        <h2>Tentang</h2>
         <h3>Di sini, kami menghadirkan kue kering yang memanjakan lidah dengan kelezatan dan kualitas terbaik. Setiap produk kami dibuat dengan bahan berkualitas dan resep istimewa, sempurna untuk merayakan momen spesial atau sebagai camilan sehari-hari. Rasakan kebahagiaan dan kehangatan di setiap gigitan!</h3>
     </section>
 
@@ -240,36 +240,27 @@ if ($data = $result->fetch_assoc()) {
                 <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
             </div>
             <div class="box">
-                <h3>Quick Links</h3>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Home</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Product</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Blogs</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Review</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Contact</a>
+                <h3>Link Cepat</h3>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Beranda</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Produk</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Blog</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Umpan Balik</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Kontak</a>
             </div>
             <div class="box">
-                <h3>Extra Links</h3>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Account Info</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Order Item</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Privacy Policy</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Payment Method</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Our Services</a>
+                <h3>Link Ekstra</h3>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Info Akun</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Pesanan</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Metode Pembayaran</a>
             </div>
             <div class="box">
                 <h3>Contact Info</h3>
-                <a href="#"> <i class="fas fa-phone"></i>+91 12222 34444</a>
+                <a href="#"> <i class="fas fa-phone"></i>+62 12222 34444</a>
                 <a href="#"> <i class="fas fa-envelope"></i>dannydesigner@gmail.com</a>
             </div>
         </div>
-        <div class="share">
-            <a href="#" class="fab fa-facebook-f"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a>
-            <a href="#" class="fab fa-linkedin"></a>
-            <a href="#" class="fab fa-pinterest"></a>
-        </div>
         <div class="credit">
-            Created by <span>Mr.Danny Designer</span> | All rights reserved!
+            Created by <span>Pakde Bogor</span> @CroquantCookies
         </div>
     </footer>
 
