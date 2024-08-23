@@ -37,7 +37,7 @@ if ($data = $result->fetch_assoc()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="users.css">
+    <link rel="stylesheet" href="user.css">
 </head>
 <body>
 
@@ -56,17 +56,19 @@ if ($data = $result->fetch_assoc()) {
             <a href="#contact">Contact</a>
         </nav>
 
-        <div class="icon">
-            <i class="fas fa-search" id="search"></i>
-            <i class="fas fa-bars" id="menu-bar"></i>
-        </div>
-
-        <div class="search">
-            <input type="search" placeholder="Search...">
-        </div>
-
-        <div class="profile">
-            <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
+        
+        <div class="nav-right">
+            <div class="icon">
+                <i class="fas fa-search" id="search"></i>
+                <i class="fas fa-bars" id="menu-bar"></i>
+            </div>
+            <div class="search">
+                <input type="search" placeholder="Search...">
+            </div>
+    
+            <div class="profile">
+                <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
+            </div>
         </div>
     </header>
 

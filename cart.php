@@ -31,7 +31,7 @@ if ($data = $result->fetch_assoc()) {
     <link rel="stylesheet" href="cart.css">
 </head>
 <body>
-    
+
 <nav class="header">
         <div class="logoContent">
             <a href="#" class="logo"><img src="images/logo kita.png" alt="Logo"></a>
@@ -56,7 +56,7 @@ if ($data = $result->fetch_assoc()) {
         </div>
 
         <div class="profile">
-            <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
+            <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50 id="profileImage">
         </div>
     </nav>
     <div class="container">

@@ -36,7 +36,7 @@ html::-webkit-scrollbar-thumb{
     background-color: var(--white);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 .header .logoContent{
     display: flex;
@@ -114,6 +114,7 @@ html::-webkit-scrollbar-thumb{
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .cart-header {
     display: flex;
     justify-content: space-between;
@@ -123,6 +124,11 @@ html::-webkit-scrollbar-thumb{
 }
 .cart-header h2 {
     margin: 0;
+    font-size: 30px;
+}
+
+.cart-header span{
+    font-size: 20px;
 }
 .cart-item {
     display: flex;
@@ -138,13 +144,14 @@ html::-webkit-scrollbar-thumb{
     align-items: center;
 }
 .item-info img {
-    width: 100px;
+    width: 300px;
     height: auto;
     border-radius: 8px;
     margin-right: 1em;
 }
 .item-details {
     flex-grow: 1;
+    font-size: 20px;
 }
 .item-details h3 {
     margin: 0;
@@ -155,17 +162,16 @@ html::-webkit-scrollbar-thumb{
 }
 .item-price {
     text-align: right;
-    font-size: 1.2em;
+    font-size: 20px;
     color: #333;
 }
 .cart-total {
     margin-top: 2em;
     text-align: right;
-    font-size: 1.5em;
+    font-size: 20px;
 }
 .cart-actions {
-    display: flex;
-    justify-content: space-between;
+    float: right;
     margin-top: 2em;
 }
 .btn {
