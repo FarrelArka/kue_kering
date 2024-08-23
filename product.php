@@ -51,7 +51,7 @@ if ($data = $result->fetch_assoc()) {
         <div class="navbar">
             <a href="user.php">Home</a>
             <a href="product.html">Product</a>
-            <a href="#">Cart</a>
+            <a href="cart.html">Cart</a>
             <a href="#">Order</a>
             <a href="#contact">Contact</a>
         </div>
@@ -283,7 +283,7 @@ if ($data = $result->fetch_assoc()) {
                     <a href="#">
                         <img src="images/logo kita.png" alt="Logo">
                     </a>
-                    <h1 class="logoName">Sweet Cake</h1>
+                    <h1 class="logoName">Croquant Cookies</h1>
                 </div>
                 <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
             </div>

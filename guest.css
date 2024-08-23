@@ -447,7 +447,9 @@ border-radius: 100%;
         width: 90%;
     }
 }
-
+.footer .box-container .mainBox p {
+    text-align: center;
+}
 @media (max-width:600px){
     html{
         font-size: 50%;

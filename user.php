@@ -49,9 +49,10 @@ if ($data = $result->fetch_assoc()) {
         </div>
 
         <nav class="navbar">
-            <a href="#home">Home</a>
-            <a href="product.html">Product</a>
-            <a href="#review">Review</a>
+        <a href="user.php">Home</a>
+            <a href="product.php">Product</a>
+            <a href="cart.php">Cart</a>
+            <a href="#">Order</a>
             <a href="#contact">Contact</a>
         </nav>
 
