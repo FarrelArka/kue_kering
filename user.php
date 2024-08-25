@@ -52,7 +52,7 @@ if ($data = $result->fetch_assoc()) {
         <a href="user.php">Berada</a>
             <a href="product.php">Produk</a>
             <a href="cart.php">Keranjang</a>
-            <a href="#">Pesan</a>
+            <a href="order.php">Pesan</a>
             <a href="#contact">Hubungi</a>
         </nav>
 
@@ -75,10 +75,10 @@ if ($data = $result->fetch_assoc()) {
     <!-- Home Section -->
     <section class="home" id="home">
         <div class="homeContent">
-            <h2>Kue Enak Untuk Semuanya</h2>
+            <h2>Kue Enak Untuk Semua</h2>
             <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
             <div class="home-btn">
-                <a href="#"><button>Lihat Selengkapnya</button></a>
+                <a href="product.php"><button>Lihat Selengkapnya</button></a>
             </div>
         </div>
     </section>
@@ -260,7 +260,7 @@ if ($data = $result->fetch_assoc()) {
             </div>
         </div>
         <div class="credit">
-            Created by <span>Pakde Bogor</span> @CroquantCookies
+            Created by <span>Farrel Arkana</span> @CroquantCookies
         </div>
     </footer>
 

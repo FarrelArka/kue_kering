@@ -29,6 +29,11 @@ if ($data = $result->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keranjang Belanja</title>
     <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body>
 
@@ -40,9 +45,9 @@ if ($data = $result->fetch_assoc()) {
 
         <div class="navbar">
             <a href="user.php">Home</a>
-            <a href="product.html">Product</a>
-            <a href="cart.html">Cart</a>
-            <a href="#">Order</a>
+            <a href="product.php">Product</a>
+            <a href="cart.php">Cart</a>
+            <a href="order.php">Order</a>
             <a href="#contact">Contact</a>
         </div>
 
