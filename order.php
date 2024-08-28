@@ -1,25 +1,54 @@
 <?php
 include "koneksi.php";
-session_start(); // Mulai sesi
+session_start(); // Start session
 
-// Cek apakah pengguna sudah login
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo "Anda harus login terlebih dahulu.";
     exit();
 }
 
-// Ambil ID pengguna dari sesi
+// Get user ID from session
 $id = $_SESSION['user_id'];
 
-// Mengambil data dari database berdasarkan ID user yang login
+// Fetch user data based on the logged-in user ID
 $query = "SELECT * FROM users WHERE user_id=?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Cek apakah data pengguna ditemukan
+// Check if user data was found
 if ($data = $result->fetch_assoc()) {
+    // Fetch orders from the database
+    $query_orders = "SELECT t.transaction_id, t.status, p.image, p.name, dt.quantity, dt.total_bayar
+                 FROM transaction t
+                 JOIN detail_transaction dt ON t.transaction_id = dt.transaction_id
+                 JOIN products p ON dt.product_id = p.product_id
+                 WHERE t.user_id = ?";
+
+    $stmt_orders = $conn->prepare($query_orders);
+    $stmt_orders->bind_param("i", $id);
+    $stmt_orders->execute();
+    $orders_result = $stmt_orders->get_result();
+
+    // Organize orders by transaction_id
+    $orders = [];
+    while ($row = $orders_result->fetch_assoc()) {
+        $transaction_id = $row['transaction_id'];
+        if (!isset($orders[$transaction_id])) {
+            $orders[$transaction_id] = [
+                'status' => $row['status'],
+                'items' => []
+            ];
+        }
+        $orders[$transaction_id]['items'][] = [
+            'image' => $row['image'],
+            'name' => $row['name'],
+            'quantity' => $row['quantity'],
+            'total_bayar' => $row['total_bayar']
+        ];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,10 +57,7 @@ if ($data = $result->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Status</title>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-
-<!-- Font Awesome CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="order.css">
 </head>
 <body>
@@ -42,10 +68,10 @@ if ($data = $result->fetch_assoc()) {
         </div>
 
         <nav class="navbar">
-        <a href="user.php">Berada</a>
+        <a href="user.php">Beranda</a>
             <a href="product.php">Produk</a>
             <a href="cart.php">Keranjang</a>
-            <a href="order.php">Pesan</a>
+            <a href="order.php">Pesanan</a>
             <a href="#contact">Hubungi</a>
         </nav>
 
@@ -64,64 +90,56 @@ if ($data = $result->fetch_assoc()) {
             </div>
         </div>
     </header>
-
-    <!-- Home Section -->
-    <section class="home" id="home">
-        <div class="homeContent">
-            <h2>Kue Enak Untuk Semua</h2>
-            <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
-            <div class="home-btn">
-                <a href="product.php"><button>Lihat Selengkapnya</button></a>
+    
+<div class="container">
+    <h1>Order Status</h1>
+    <div class="order-list">
+        <?php foreach ($orders as $transaction_id => $order) { ?>
+        <div class="order-item" onclick="openPopup('<?php echo $transaction_id; ?>')">
+            <h2>Order <?php echo htmlspecialchars($transaction_id); ?></h2>
+            <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
+            <div class="order-images">
+                <?php foreach ($order['items'] as $item) { ?>
+                    <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
+                <?php } ?>
             </div>
         </div>
-    </section>
-    <div class="container">
-        <h1>Order Status</h1>
-        <div class="order-list">
-            <div class="order-item" onclick="openPopup('order1')">
-                <img src="images/3.png" alt="Product 1">
-                <div class="order-details">
-                    <h2>Order 2</h2>
-                    <p>Status: In Progress</p>
-                </div>
+        <?php } ?>
+    </div>
+</div>
+
+<!-- Pop-up Detail Order -->
+<?php foreach ($orders as $transaction_id => $order) { ?>
+<div id="<?php echo $transaction_id; ?>" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup('<?php echo $transaction_id; ?>')">&times;</span>
+        <h2>Order <?php echo htmlspecialchars($transaction_id); ?></h2>
+        <?php foreach ($order['items'] as $item) { ?>
+        <div class="popup-item">
+        <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
+
+            <div class="pop-up-anjay">
+                <p>Product: <?php echo htmlspecialchars($item['name']); ?></p>
+                <p>Quantity: <?php echo htmlspecialchars($item['quantity']); ?></p>
+                <p>Total Bayar: <?php echo htmlspecialchars($item['total_bayar']); ?></p>
             </div>
-            <div class="order-item" onclick="openPopup('order2')">
-                <img src="images/4.png" alt="Product 2">
-                <div class="order-details">
-                    <h2>Order1</h2>
-                    <p>Status: Shipped</p>
-                </div>
-            </div>
-            <!-- Tambahkan lebih banyak order-item sesuai kebutuhan -->
         </div>
+        <?php } ?>
+        <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
     </div>
+</div>
+<?php } ?>
 
-    <!-- Pop-up Detail Order -->
-    <div id="order1" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="closePopup('order1')">&times;</span>
-            <h2>Order 2</h2>
-            <img src="images/3.png" alt="Product 1" class="popup-img">
-            <p>Product: Putri Salju</p>
-            <p>Quantity: 2</p>
-            <p>Status: in Process</p>
-            <p>Expected Delivery: 3 days</p>
-        </div>
-    </div>
+<script>
+function openPopup(id) {
+    document.getElementById(id).style.display = 'flex';
+}
 
-    <div id="order2" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="closePopup('order2')">&times;</span>
-            <h2>Order 2</h2>
-            <img src="images/4.png" alt="Product 2" class="popup-img">
-            <p>Product: Kastengel</p>
-            <p>Quantity: 1</p>
-            <p>Status: Complete</p>
-            <p>Expected Delivery: 5 days</p>
-        </div>
-    </div>
+function closePopup(id) {
+    document.getElementById(id).style.display = 'none';
+}
+</script>
 
-    <script src="script.js"></script>
 </body>
 </html>
 
@@ -130,6 +148,6 @@ if ($data = $result->fetch_assoc()) {
     echo "Data user tidak ditemukan.";
 }
 
-// Tutup koneksi
+// Close connection
 $conn->close();
 ?>

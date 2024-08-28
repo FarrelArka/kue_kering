@@ -37,7 +37,7 @@ if ($data = $result->fetch_assoc()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="product_user.css">
+    <link rel="stylesheet" href="product.css">
 </head>
 <body>
 
@@ -49,11 +49,9 @@ if ($data = $result->fetch_assoc()) {
         </div>
 
         <div class="navbar">
-        <a href="user.php">Beranda</a>
-            <a href="product.php">Produk</a>
-            <a href="cart.php">Keranjang</a>
-            <a href="order.php">Pesanan</a>
-            <a href="#contact">Hubungi</a>
+            <a href="index.php">Home</a>
+            <a href="product_guest.php">Product</a>
+            <a href="#contact">Contact</a>
         </div>
 
         <div class="icon">
@@ -65,9 +63,6 @@ if ($data = $result->fetch_assoc()) {
             <input type="search" placeholder="Search...">
         </div>
 
-        <div class="profile">
-            <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
-        </div>
     </nav>
 
 

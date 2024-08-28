@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = ""; // Sesuaikan dengan password database
-$dbname = "kue_kering"; // Ganti dengan nama database kamu
+$dbname = "croquant_cookies"; // Ganti dengan nama database kamu
 
 // Buat koneksi
 $conn = new mysqli($servername, $username, $password, $dbname);

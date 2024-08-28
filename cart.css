@@ -6,7 +6,7 @@
     --box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 *{
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Poppins',sans-serif;
     margin: 0; padding: 0;
     box-sizing: border-box;
     outline: none;
@@ -165,6 +165,11 @@ html::-webkit-scrollbar-thumb{
     font-size: 20px;
     color: #333;
 }
+
+.item-quantity{
+    border: 1px;
+}
+
 .cart-total {
     margin-top: 2em;
     text-align: right;
