@@ -48,7 +48,7 @@
         <!-- home section start here  -->
         <section class="home" id="home">
             <div class="homeContent">
-                <h2>Delicious Cookies for Everyone </h2>
+                <h2>Kue Enak Untuk Semua</h2>
                 <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
                 <div class="home-btn">
                     <a href="register.html">Daftar</a>
@@ -128,32 +128,24 @@
 
                 </div>
                 <div class="box">
-                    <h3>Quick link</h3>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>Home</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>product</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>blogs</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>review</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>contact</a>
-
-                </div>
-                <div class="box">
-                    <h3>Extra link</h3>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>Account
-                        info</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>order
-                        item</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>privacy
-                        policy</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>payment
-                        method</a>
-                    <a href="#"> <i class="fas fa-arrow-right"></i>our
-                        services</a>
-                </div>
+                <h3>Link Cepat</h3>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Beranda</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Produk</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Blog</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Umpan Balik</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Kontak</a>
+            </div>
+            <div class="box">
+                <h3>Link Ekstra</h3>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Info Akun</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Pesanan</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Metode Pembayaran</a>
+            </div>
                 <div class="box">
                     <h3>Contact Info</h3>
-                    <a href="#"> <i class="fas fa-phone"></i>+91 12222 34444</a>
+                    <a href="#"> <i class="fas fa-phone"></i>+62 896 0262 3481</a>
                     <a href="#"> <i
-                            class="fas fa-envelope"></i>dannydesigner@gmail.com</a>
+                            class="fas fa-envelope"></i>croquant.cookies00@gmail.com</a>
 
                 </div>
 
@@ -166,8 +158,8 @@
                 <a href="#" class="fab fa-pinterest"></a>
             </div>
             <div class="credit">
-                created by <span>Mr.Danny Designer </span> |all rights reserved
-                !
+                Dibuat Oleh <span>Farrel Arkana</span> | @CroquantCookies
+                
             </div>
         </footer>
 
