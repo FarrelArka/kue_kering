@@ -77,199 +77,36 @@ if ($data = $result->fetch_assoc()) {
             <br><br>
             <div class="swiper product-row">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/6.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>ChocoCookies</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/4.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Kastengel</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/5.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Lidah Kucing</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/3.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Putri Salju</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
+                <?php
+                $sql = "SELECT * FROM products";
+                $result = $conn->query($sql);
 
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-            <div class="swiper product-row">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/3.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Putri Salju</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/4.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Kastengel</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/5.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Lidah Kucing</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/6.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>ChocoCookies</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-        
-            <div class="swiper product-row">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/3.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Putri Salju</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/4.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Kastengel</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/5.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>Kue Lidah Kucing</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide box">
-                        <div class="img">
-                            <img src="images/6.png" alt>
-                        </div>
-                        <div class="product-content">
-                            <h3>ChocoCookies</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Culpa adipisci reiciendis
-                                assumenda.
-                            </p>
-                            <div class="orderNow">
-                                <button>Order Now </button>
-                            </div>
-                        </div>
-                    </div>
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        if (!isset($row["product_id"])) {
+                            echo "Error: Product ID not found.";
+                            continue;
+                        }
+                        echo '<div class="swiper-slide box">';
+                        echo '    <div class="img">';
+                        echo '        <img src="images/' . htmlspecialchars($row["image"]) . '" alt="' . htmlspecialchars($row["name"]) . '">';
+                        echo '    </div>';
+                        echo '    <div class="product-content">';
+                        echo '        <h3>' . htmlspecialchars($row["name"]) . '</h3>';
+                        echo '        <p>' . htmlspecialchars($row["description"]) . '</p>';
+                        echo '        <div class="orderNow">';
+                        echo '            <form method="POST" action="process_addcart.php">';
+                        echo '                <input type="hidden" name="product_id" value="' . htmlspecialchars($row["product_id"]) . '">';
+                        echo '                <button type="submit" name="add_to_cart">Pesan Sekarang</button>';
+                        echo '            </form>';
+                        echo '        </div>';
+                        echo '    </div>';
+                        echo '</div>';
+                    }
+                } else {
+                    echo "Tidak ada produk yang ditemukan";
+                }
+                ?>
 
                 </div>
                 <div class="swiper-pagination"></div>

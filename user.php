@@ -65,9 +65,10 @@ if ($data = $result->fetch_assoc()) {
                 <input type="search" placeholder="Search...">
             </div>
     
-            <div class="profile">
+           <a href="profile_user.php"> <div class="profile">
+                
                 <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
-            </div>
+            </div></a>
         </div>
     </header>
 
@@ -144,8 +145,8 @@ if ($data = $result->fetch_assoc()) {
             </div>
             <div class="box">
                 <h3>Link Cepat</h3>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Beranda</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Produk</a>
+                <a href="user.php"> <i class="fas fa-arrow-right"></i>Beranda</a>
+                <a href="product.php"> <i class="fas fa-arrow-right"></i>Produk</a>
                 <a href="#"> <i class="fas fa-arrow-right"></i>Blog</a>
                 <a href="#"> <i class="fas fa-arrow-right"></i>Umpan Balik</a>
                 <a href="#"> <i class="fas fa-arrow-right"></i>Kontak</a>

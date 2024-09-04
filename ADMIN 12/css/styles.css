@@ -188,6 +188,10 @@
     color: var(--primary);
 }
 
+.content .navbar .sidebar-toggler:hover{
+    color: #888;
+    transition: .3s ease-in-out;
+}
 .content .navbar .sidebar-toggler,
 .content .navbar .navbar-nav .nav-link i {
     width: 40px;
@@ -197,6 +201,8 @@
     justify-content: center;
     background: #FFFFFF;
     border-radius: 40px;
+    transition: .3s ease-in-out;
+
 }
 
 .content .navbar .dropdown-toggle::after {

@@ -18,7 +18,7 @@ body{
   width: 100%;
   background-color: #fff;
   padding: 25px 30px;
-  border-radius: 5px;
+  border-radius: 15px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.15);
 }
 .container .title{
@@ -33,7 +33,7 @@ body{
   bottom: 0;
   height: 3px;
   width: 30px;
-  border-radius: 5px;
+  border-radius: 15px;
   background-color: rgb(24, 24, 24);
 }
 .content form .user-details{

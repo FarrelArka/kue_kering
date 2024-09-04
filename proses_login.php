@@ -1,5 +1,5 @@
 <?php
- // Mulai sesi
+// Mulai sesi
 if (isset($_POST['submit'])) {
 
     include "koneksi.php";
@@ -7,7 +7,6 @@ if (isset($_POST['submit'])) {
     // Ambil data dari formulir
     $username = $_POST['username'];
     $password = $_POST['password']; 
-
 
     // Query untuk mencari pengguna dengan username yang sesuai
     $sql = "SELECT * FROM users WHERE username = ?";
@@ -22,10 +21,17 @@ if (isset($_POST['submit'])) {
 
         // Verifikasi password
         if (password_verify($password, $user['password'])) {
-            // Password benar, set session dan redirect
+            // Password benar, set session
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
-            header("Location: user.php"); // Ganti dengan halaman tujuan setelah login
+            $_SESSION['role'] = $user['role']; // Simpan role dalam session
+
+            // Redirect berdasarkan role
+            if ($user['role'] == 'admin') {
+                header("Location: admin.php"); // Ganti dengan halaman admin
+            } else {
+                header("Location: user.php"); // Ganti dengan halaman user
+            }
             exit();
         } else {
             echo "Invalid password.";

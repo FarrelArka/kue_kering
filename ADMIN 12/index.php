@@ -1,3 +1,25 @@
+<?php
+session_start(); // Memulai session
+
+// Cek apakah pengguna sudah login
+if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+    $username = $_SESSION['username'];
+    $role = $_SESSION['role'];
+} else {
+    // Jika pengguna belum login, redirect ke halaman login atau tampilkan pesan error
+    header("Location: login.php");
+    exit;
+}
+
+// Koneksi ke database
+include "koneksi.php";
+
+// Query untuk mengambil data dari tabel users
+$sql = "SELECT user_id, username, email, alamat, no_hp, foto, role FROM users";
+$result = $conn->query($sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +50,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
 </head>
 
 <body>
@@ -40,7 +62,6 @@
             </div>
         </div>
         <!-- Spinner End -->
-
 
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
@@ -54,17 +75,19 @@
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
+                        <h6 class="mb-0"><?php echo htmlspecialchars($username); ?></h6>
+                        <span><?php echo htmlspecialchars($role); ?></span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="produk.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Produk</a>
+                    <a href="manage_order.php" class="nav-item nav-link"><i class="fa fa-edit me-2"></i>Order</a>
+                    <a href="manage_points.php" class="nav-item nav-link"><i class="fa fa-star me-2"></i>Points</a>
                 </div>
             </nav>
         </div>
         <!-- Sidebar End -->
-
 
         <!-- Content Start -->
         <div class="content">
@@ -78,11 +101,11 @@
                 </a>
 
                 <div class="navbar-nav align-items-center ms-auto">
-                    
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
+                            <!-- Tampilkan gambar profil pengguna, jika ada -->
+                            <img src="<?php echo isset($row['foto']) ? "../uploads/" . htmlspecialchars($row['foto']) : 'img/default.jpg'; ?>" alt="Profile Picture" width="40" height="40" id="profileImage">
+                            <span class="d-none d-lg-inline-flex"><?php echo htmlspecialchars($username); ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
@@ -94,11 +117,9 @@
             </nav>
             <!-- Navbar End -->
 
-
             <!-- Sale & Revenue Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
-                   
                     <div class="col-sm-6 col-xl-3">
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
@@ -112,7 +133,7 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <div class="total-terjual"><p class="mb-2">Total Produk Terjual</p></div>
+                                <p class="mb-2">Total Produk Terjual</p>
                                 <h6 class="mb-0">12 Produk</h6>
                             </div>
                         </div>
@@ -130,16 +151,11 @@
             </div>
             <!-- Sale & Revenue End -->
 
-
-            <!-- Sales Chart Start -->
-            
-
-
             <!-- Recent Sales Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
+                        <h6 class="mb-0">Recent Sales</h6>
                         <a href="">Show All</a>
                     </div>
                     <div class="table-responsive">
@@ -147,71 +163,49 @@
                             <thead>
                                 <tr class="text-dark">
                                     <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Alamat</th>
+                                    <th scope="col">No Hp</th>
+                                    <th scope="col">Role</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
+                                <?php
+                                if ($result->num_rows > 0) {
+                                    // Output data untuk setiap baris
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td><input class='form-check-input' type='checkbox'></td>";
+                                        echo "<td>".$row['username']."</td>";
+                                        echo "<td>".$row['email']."</td>";
+                                        echo "<td>".$row['alamat']."</td>";
+                                        echo "<td>".$row['no_hp']."</td>";
+                                        echo "<td>".$row['role']."</td>";
+                                        echo "<td><button class='btn btn-primary btn-sm'>Detail</button></td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='7' class='text-center'>Tidak ada data</td></tr>";
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            <!-- Recent Sales End -->
+
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Your Site Name</a>, All Right Reserved. 
+                            &copy; <a href="#">Croquant Cookies</a>, All Right Reserved.
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!-- Credits removed -->
                         </div>
                     </div>
                 </div>
@@ -219,10 +213,6 @@
             <!-- Footer End -->
         </div>
         <!-- Content End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
@@ -241,3 +231,7 @@
 </body>
 
 </html>
+
+<?php
+$conn->close();
+?>
