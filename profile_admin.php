@@ -60,8 +60,8 @@ $conn->close();
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center">User Profile</h2>
-        <form action="user.php" method="post">
+        <h2 class="text-center">Admin Profile</h2>
+        <form action="admin.php" method="post">
         <div class="card">
             <div class="card-body">
                 <!-- Profile Picture -->

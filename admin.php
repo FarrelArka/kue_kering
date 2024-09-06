@@ -14,11 +14,22 @@ if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
 // Koneksi ke database
 include "koneksi.php";
 
-// Query untuk mengambil data dari tabel users
-$sql = "SELECT user_id, username, email, alamat, no_hp, foto, role FROM users";
-$result = $conn->query($sql);
+// Query untuk mengambil data pengguna yang sedang login
+$sql = "SELECT user_id, username, email, alamat, no_hp, foto, role FROM users WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $name);
+$stmt->execute();
+$result = $stmt->get_result();
 
+// Ambil data pengguna
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+} else {
+    echo "Pengguna tidak ditemukan";
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -61,19 +72,19 @@ $result = $conn->query($sql);
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
-                <a href="index.php" class="navbar-brand mx-4 mb-3">
+                <a href="index.php" class="navbar-brand mx-2 mb-3">
                     <h3>Croquant Cookies</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
-    <div class="position-relative">
-        <img class="rounded-circle" src="<?php echo 'uploads/' . htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
-        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-    </div>
-    <div class="ms-3">
-        <h6 class="mb-0"><?php echo htmlspecialchars($name); ?></h6>
-        <span><?php echo htmlspecialchars($role); ?></span>
-    </div>
-</div>
+                    <div class="position-relative">
+                    <img class="rounded-circle me-lg-2" src="<?php echo htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="mb-0"><?php echo htmlspecialchars($name); ?></h6>
+                        <span><?php echo htmlspecialchars($role); ?></span>
+                    </div>
+                </div>
 
                 <div class="navbar-nav w-100">
                     <a href="admin.php" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
@@ -99,7 +110,7 @@ $result = $conn->query($sql);
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="<?php echo htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex"><?php echo htmlspecialchars($name); ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -111,10 +122,6 @@ $result = $conn->query($sql);
                 </div>
             </nav>
             <!-- Navbar End -->
-
-        <!-- Content Start -->
-        
-           
 
             <!-- Sale & Revenue Start -->
             <div class="container-fluid pt-4 px-4">
@@ -172,21 +179,24 @@ $result = $conn->query($sql);
                             </thead>
                             <tbody>
                                 <?php
+                                $sql = "SELECT user_id, username, email, alamat, no_hp, role FROM users";
+                                $result = $conn->query($sql);
+
                                 if ($result->num_rows > 0) {
-                                    // Output data untuk setiap baris
-                                    while($row = $result->fetch_assoc()) {
+                                    while ($row = $result->fetch_assoc()) {
                                         echo "<tr>";
-                                        echo "<td><input class='form-check-input' type='checkbox'></td>";
-                                        echo "<td>".$row['username']."</td>";
-                                        echo "<td>".$row['email']."</td>";
-                                        echo "<td>".$row['alamat']."</td>";
-                                        echo "<td>".$row['no_hp']."</td>";
-                                        echo "<td>".$row['role']."</td>";
-                                        echo "<td><button class='btn btn-primary btn-sm'>Detail</button></td>";
+                                        echo '<td><input class="form-check-input" type="checkbox"></td>';
+                                        echo "<td>" . htmlspecialchars($row["username"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["email"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["alamat"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["no_hp"]) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
+                                        echo "<td><a class='btn btn-sm btn-primary' href='edit_user.php?id=" . htmlspecialchars($row["user_id"]) . "'>Edit</a> 
+                                              <a class='btn btn-sm btn-danger' href='delete_user.php?id=" . htmlspecialchars($row["user_id"]) . "'>Delete</a></td>";
                                         echo "</tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='7' class='text-center'>Tidak ada data</td></tr>";
+                                    echo "<tr><td colspan='7'>No results found</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -195,23 +205,11 @@ $result = $conn->query($sql);
                 </div>
             </div>
             <!-- Recent Sales End -->
-
-            <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Croquant Cookies</a>, All Right Reserved.
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!-- Credits removed -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Footer End -->
         </div>
         <!-- Content End -->
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
@@ -230,7 +228,3 @@ $result = $conn->query($sql);
 </body>
 
 </html>
-
-<?php
-$conn->close();
-?>
