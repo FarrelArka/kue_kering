@@ -46,12 +46,11 @@ foreach ($cart_data as $item) {
     $total += $item_total;
 }
 
-$discount = 0; // Inisialisasi diskon, misal jika 1 poin = 1000
-if ($poin > 0) {
-    $discount = $poin * 1000; // Atur diskon sesuai dengan poin, jika 1 poin = 1000
-}
+// Menghitung diskon langsung dengan nilai poin
+$discount = min($total, $poin);
+$remaining_poin = max(0, $poin - $total);
+$total_final = $total - $discount;
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -158,7 +157,7 @@ if ($poin > 0) {
         </div>
         <?php } ?>
         <div class="cart-total">
-            Total: Rp. <?php echo number_format($total, 0, ',', '.'); ?>
+            <h3>Total Harga: Rp. <?php echo number_format($total, 0, ',', '.'); ?></h3>
         </div>
         <!-- Tombol di luar pop-up -->
         <div class="cart-actions">
@@ -174,7 +173,7 @@ if ($poin > 0) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5>Pilih Metode Pembayaran</h5>
-                    <span class="close" style="font-weight: bold;">&times;</span>
+                    <span class="close">&times;</span>
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="checkout.php">
@@ -209,7 +208,7 @@ if ($poin > 0) {
                         <div class="discount-options">
                             <h6>Gunakan Diskon Poin Anda</h6>
                             <p>Poin Anda: <?php echo htmlspecialchars($poin); ?></p>
-                            <label><input type="checkbox" name="use_points" value="yes"> <span style="font-weight: bold;">Gunakan poin untuk diskon</span></label>
+                            <label><input type="checkbox" name="use_points" id="use_points" value="yes"> <span style="font-weight: bold;">Gunakan poin untuk diskon</span></label>
                         </div>
                         <div class="modal-footer">
                             <p>Total Bayar: Rp. <span id="totalBayar"><?php echo number_format($total, 0, ',', '.'); ?></span></p>
@@ -261,7 +260,7 @@ if ($poin > 0) {
             function updateTotal() {
                 var total = <?php echo json_encode($total); ?>;
                 var discount = <?php echo json_encode($discount); ?>;
-                var usePoints = document.querySelector('input[name="use_points"]').checked;
+                var usePoints = document.getElementById('use_points').checked;
 
                 if (usePoints) {
                     total -= discount;
@@ -272,7 +271,7 @@ if ($poin > 0) {
             }
 
             // Update total when use_points checkbox is toggled
-            document.querySelector('input[name="use_points"]').addEventListener('change', updateTotal);
+            document.getElementById('use_points').addEventListener('change', updateTotal);
         </script>
 
     </div>
@@ -280,6 +279,3 @@ if ($poin > 0) {
 
 </body>
 </html>
-
-
-

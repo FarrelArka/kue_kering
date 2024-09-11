@@ -45,16 +45,22 @@ if (isset($_POST['checkout'])) {
 
     // Hitung diskon berdasarkan poin jika checkbox dipilih
     if ($use_points) {
-        $discount = $poin * 1000; // Setel diskon dari poin
+        $discount = $poin;
         $total -= $discount;
         if ($total < 0) {
             $total = 0; // Pastikan total tidak kurang dari 0
         }
 
-        // Update poin pengguna menjadi 0 jika digunakan
-        $update_poin_query = "UPDATE point SET point = 0 WHERE user_id = ?";
+        // Update poin pengguna sesuai dengan sisa dari pengurangan
+        $remaining_points = $poin - $discount;
+        if ($remaining_points < 0) {
+            $remaining_points = 0; // Pastikan poin tidak negatif
+        }
+
+        // Update poin pengguna di database
+        $update_poin_query = "UPDATE point SET point = ? WHERE user_id = ?";
         $stmt = $conn->prepare($update_poin_query);
-        $stmt->bind_param("i", $user_id);
+        $stmt->bind_param("ii", $remaining_points, $user_id);
         $stmt->execute();
     }
 
