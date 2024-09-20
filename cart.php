@@ -50,15 +50,68 @@ foreach ($cart_data as $item) {
 $discount = min($total, $poin);
 $remaining_poin = max(0, $poin - $total);
 $total_final = $total - $discount;
+
+// Cek apakah ada pesan di sesi
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']); // Hapus pesan dari sesi setelah diambil
+} else {
+    $message = '';
+}
+
+// Cek apakah ada Snap Token di sesi
+if (isset($_SESSION['snapToken'])) {
+    $snapToken = $_SESSION['snapToken'];
+    unset($_SESSION['snapToken']); // Hapus Snap Token dari sesi setelah diambil
+} else {
+    $snapToken = '';
+}
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keranjang Belanja</title>
-    <link rel="stylesheet" href="troli.css">
+    <title>Croquant Cookies</title>
     <style>
+                .profile {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile img {
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 150px;
+            border-radius: 10px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            border-radius: 10px;    
+            font-size: 15px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .profile:hover .dropdown-content {
+            display: block;
+        }
         /* Modal Background */
         .modal {
             display: none; /* Hidden by default */
@@ -97,79 +150,94 @@ $total_final = $total - $discount;
             cursor: pointer;
         }
     </style>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="troli.css">
+
+    <!-- Midtrans Snap.js -->
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="YOUR_CLIENT_KEY"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
-<nav class="header">
-    <div class="logoContent">
-        <a href="#" class="logo"><img src="images/logo kita.png" alt="Logo"></a>
-        <h1 class="logoName">Croquant Cookies</h1>
-    </div>
-
-    <div class="navbar">
-        <a href="user.php">Beranda</a>
-        <a href="product.php">Produk</a>
-        <a href="cart.php">Keranjang</a>
-        <a href="order.php">Pesanan</a>
-        <a href="#contact">Hubungi</a>
-    </div>
-
-    <div class="icon">
-        <i class="fas fa-search" id="search"></i>
-        <i class="fas fa-bars" id="menu-bar"></i>
-    </div>
-
-    <div class="search">
-        <input type="search" placeholder="Search...">
-    </div>
-
-    <div class="profile">
-        <img src="<?php echo htmlspecialchars($user_data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
-    </div>
-</nav>
-
-<div class="container">
-    <div class="cart">
-        <div class="cart-header">
-            <h2>Keranjang Anda</h2>
-            <span>Jumlah Item: <?php echo count($cart_data); ?></span>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logoContent">
+            <a href="#" class="logo"><img src="images/logo kita.png" alt="Logo"></a>
+            <h1 class="logoName">Croquant Cookies</h1>
         </div>
-        <?php
-        foreach ($cart_data as $item) {
-            $item_total = $item['quantity'] * $item['price'];
-        ?>
-        <div class="cart-item">
-            <div class="item-info">
-                <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
-                <div class="item-details">
-                    <h3><?php echo htmlspecialchars($item['name']); ?></h3>
-                    <p>Deskripsi singkat produk</p>
+
+        <nav class="navbar">
+            <a href="user.php">Beranda</a>
+            <a href="product.php">Produk</a>
+            <a href="cart.php" active>Keranjang</a>
+            <a href="order.php">Pesanan</a>
+            <a href="#contact">Hubungi</a>
+        </nav>
+
+        <div class="nav-right">
+            <div class="icon">
+                <i class="fas fa-search" id="search"></i>
+                <i class="fas fa-bars" id="menu-bar"></i>
+            </div>
+            <div class="search">
+            <form action="search.php" method="GET">
+                <input type="search" name="query" placeholder="Search..." required>
+                <input type="hidden"><i class="fas fa-search"></i>
+            </form>
+            </div>
+    
+            <div class="profile">
+                <img src="<?php echo htmlspecialchars($user_data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
+                <div class="dropdown-content">
+                    <a href="profile_user.php">Profil</a>
+                    <a href="logout.php">Logout</a>
                 </div>
             </div>
-            <div class="item-quantity">
-                <form method="POST" action="update_quantity.php">
-                    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
-                    <input type="number" name="quantity" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1">
-                    <button type="submit" name="update_quantity">Update</button>
-                </form>
-            </div>
-            <div class="item-price">Rp. <?php echo number_format($item['price'], 0, ',', '.'); ?></div>
         </div>
-        <?php } ?>
-        <div class="cart-total">
-            <h3>Total Harga: Rp. <?php echo number_format($total, 0, ',', '.'); ?></h3>
-        </div>
-        <!-- Tombol di luar pop-up -->
-        <div class="cart-actions">
-            <button class="btn-outside" onclick="window.location.href='product.php'">Kembali Berbelanja</button>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn-outside" id="checkoutButton">
-                Checkout
-            </button>
-        </div>
+    </header>
 
-        <!-- Modal -->
-        <div id="checkoutModal" class="modal">
+    <div class="container">
+        <div class="cart">
+            <div class="cart-header">
+                <h2>Keranjang Anda</h2>
+                <span>Jumlah Item: <?php echo count($cart_data); ?></span>
+            </div>
+            <?php foreach ($cart_data as $item): ?>
+                <div class="cart-item">
+                    <div class="item-info">
+                        <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+                        <div class="item-details">
+                            <h3><?php echo htmlspecialchars($item['name']); ?></h3>
+                            <p>Deskripsi singkat produk</p>
+                        </div>
+                    </div>
+                    <div class="item-quantity">
+                        <form method="POST" action="update_quantity.php">
+                            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
+                            <input type="number" name="quantity" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1">
+                            <button type="submit" name="update_quantity">Update</button>
+                        </form>
+                    </div>
+                    <div class="item-price">Rp. <?php echo number_format($item['price'], 0, ',', '.'); ?></div>
+                </div>
+            <?php endforeach; ?>
+            <div class="cart-total">
+                <h3>Total Harga: Rp. <?php echo number_format($total, 0, ',', '.'); ?></h3>
+            </div>
+            <!-- Tombol di luar pop-up -->
+            <div class="cart-actions">
+                <button class="btn-outside" onclick="window.location.href='product.php'">Kembali Berbelanja</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn-outside" id="checkoutButton">
+                    Checkout
+                </button>
+            </div>
+<div id="checkoutModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5>Pilih Metode Pembayaran</h5>
@@ -189,20 +257,7 @@ $total_final = $total - $discount;
                                     <input type="radio" name="payment_method" value="transfer" required>
                                     <span style="font-weight: bold;">E-Wallet</span>
                                 </label>
-                                <div id="transferOptions" class="transfer-methods" style="display: none;">
-                                    <label>
-                                        <input type="radio" name="transfer_method" value="ovo">
-                                        <img src="images/ovo.png" alt="OVO" class="ovo-logo">
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="transfer_method" value="gopay">
-                                        <img src="images/gopay.png" alt="GoPay" class="gopay-logo">
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="transfer_method" value="qris">
-                                        <img src="images/logo-qris.png" alt="QRIS" class="transfer-logo">
-                                    </label>
-                                </div>
+                               
                             </div>
                         </div>
                         <div class="discount-options">
@@ -212,70 +267,161 @@ $total_final = $total - $discount;
                         </div>
                         <div class="modal-footer">
                             <p>Total Bayar: Rp. <span id="totalBayar"><?php echo number_format($total, 0, ',', '.'); ?></span></p>
-                            <button type="submit" name="checkout" class="btn-popup">Lanjutkan Pembayaran</button>
+                            <button type="submit" name="proceed_payment" class="btn-popup">Lanjutkan Pembayaran</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
+        </div>
+    </div>
+    <footer class="footer" id="contact">
+        <div class="box-container">
+            <div class="mainBox">
+                <div class="content">
+                    <a href="#">
+                        <img src="images/logo kita.png" alt="Logo">
+                    </a>
+                    <h1 class="logoName">Croquant Cookies</h1>
+                </div>
+                <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
+            </div>
+            <div class="box">
+                <h3>Link Cepat</h3>
+                <a href="user.php"> <i class="fas fa-arrow-right"></i>Beranda</a>
+                <a href="product.php"> <i class="fas fa-arrow-right"></i>Produk</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Blog</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Umpan Balik</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Kontak</a>
+            </div>
+            <div class="box">
+                <h3>Link Ekstra</h3>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Info Akun</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Pesanan</a>
+                <a href="#"> <i class="fas fa-arrow-right"></i>Metode Pembayaran</a>
+            </div>
+            <div class="box">
+                    <h3>Contact Info</h3>
+                    <a href="#"> <i class="fas fa-phone"></i>+62 896 0262 3481</a>
+                    <a href="#"> <i
+                            class="fas fa-envelope"></i>croquant.cookies00@gmail.com</a>
+
+                </div>
+        </div>
+        <div class="credit">
+            Created by <span>Farrel Arkana</span> | @CroquantCookies        
+        </div>
+    </footer>
+
+    <?php if ($message): ?>
         <script>
-            // Get the modal
-            var modal = document.getElementById("checkoutModal");
+            $(document).ready(function() {
+                alert("<?php echo $message; ?>"); // Atau gunakan modal Bootstrap untuk pesan lebih bagus
+            });
+        </script>
+    <?php endif; ?>
 
-            // Get the button that opens the modal
-            var btn = document.getElementById("checkoutButton");
+    <?php if ($snapToken): ?>
+        <script>
+            $(document).ready(function() {
+                snap.pay('<?php echo $snapToken; ?>', {
+                    // Optional
+                    onSuccess: function(result) {
+                        alert("Pembayaran berhasil!");
+                        // Lakukan sesuatu setelah pembayaran berhasil
+                    },
+                    onPending: function(result) {
+                        alert("Menunggu pembayaran!");
+                        // Lakukan sesuatu setelah pembayaran tertunda
+                    },
+                    onError: function(result) {
+                        alert("Pembayaran gagal!");
+                        // Lakukan sesuatu setelah pembayaran gagal
+                    },
+                    onClose: function() {
+                        alert('Anda menutup pop-up tanpa menyelesaikan pembayaran');
+                        // Lakukan sesuatu jika pengguna menutup pop-up
+                    }
+                });
+            });
+        </script>
+    <?php endif; ?>
 
-            // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
+    <script>
+        // Tampilkan atau sembunyikan opsi transfer
+        document.querySelector('input[name="payment_method"][value="transfer"]').addEventListener('change', function() {
+            document.getElementById('transferOptions').style.display = 'block';
+        });
 
-            // When the user clicks the button, open the modal 
-            btn.onclick = function() {
-                modal.style.display = "block";
-                updateTotal();
-            }
+        document.querySelector('input[name="payment_method"][value="cod"]').addEventListener('change', function() {
+            document.getElementById('transferOptions').style.display = 'none';
+        });
 
-            // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
+        // Modal logic
+        var modal = document.getElementById("checkoutModal");
+        var btn = document.getElementById("checkoutButton");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+    </script>
+    <script>
+        var swiper = new Swiper('.swiper', {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 40,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 50,
+                },
+            },
+        });
 
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
+        // JavaScript untuk toggle dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            var profileImage = document.getElementById('profileImage');
+            var dropdownContent = document.querySelector('.dropdown-content');
 
-            // Display transfer options only when 'Transfer Bank' is selected
-            document.querySelector('input[name="payment_method"][value="transfer"]').addEventListener('change', function() {
-                document.getElementById('transferOptions').style.display = 'flex'; // Vertically stacked options
+            profileImage.addEventListener('click', function(event) {
+                dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
             });
 
-            document.querySelector('input[name="payment_method"][value="cod"]').addEventListener('change', function() {
-                document.getElementById('transferOptions').style.display = 'none';
-            });
-
-            // Function to update total payable based on points
-            function updateTotal() {
-                var total = <?php echo json_encode($total); ?>;
-                var discount = <?php echo json_encode($discount); ?>;
-                var usePoints = document.getElementById('use_points').checked;
-
-                if (usePoints) {
-                    total -= discount;
-                    if (total < 0) total = 0;
+            // Menutup dropdown jika mengklik di luar area dropdown
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('#profileImage')) {
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    }
                 }
-
-                document.getElementById("totalBayar").innerText = 'Rp. ' + total.toLocaleString();
-            }
-
-            // Update total when use_points checkbox is toggled
-            document.getElementById('use_points').addEventListener('change', updateTotal);
-        </script>
-
-    </div>
-</div>
-
+            });
+        });
+    </script>
+    <script src="aktif.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>

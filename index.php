@@ -62,7 +62,7 @@
         <!-- product section start here  -->
         <section class="product" id="product">
     <div class="heading">
-        <h2>Our Exclusive Products</h2>
+        <h2>Produk Kami</h2>
     </div>
     <div class="swiper product-row">
         <div class="swiper-wrapper">

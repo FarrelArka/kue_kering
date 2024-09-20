@@ -37,7 +37,47 @@ if ($data = $result->fetch_assoc()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="user.css">
+    <link rel="stylesheet" href="userss.css">
+    <style>
+        /* CSS untuk dropdown profil */
+        .profile {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile img {
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 150px;
+            border-radius: 10px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            border-radius: 10px;    
+            font-size: 15px;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .profile:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
@@ -62,13 +102,19 @@ if ($data = $result->fetch_assoc()) {
                 <i class="fas fa-bars" id="menu-bar"></i>
             </div>
             <div class="search">
-                <input type="search" placeholder="Search...">
+                <form action="search.php" method="GET">
+                    <input type="search" name="query" placeholder="Search..." required>
+                    <input type="hidden"><i class="fas fa-search"></i>
+                </form>
             </div>
-    
-           <a href="profile_user.php"> <div class="profile">
-                
+
+            <div class="profile">
                 <img src="<?php echo htmlspecialchars($data['foto']); ?>" alt="Profile Picture" width="50" height="50" id="profileImage">
-            </div></a>
+                <div class="dropdown-content">
+                    <a href="profile_user.php">Profil</a>
+                    <a href="logout.php">Logout</a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -86,7 +132,7 @@ if ($data = $result->fetch_assoc()) {
     <!-- Product Section -->
     <section class="product" id="product">
         <div class="heading">
-            <h2>Our Exclusive Products</h2>
+            <h2>Produk Kami</h2>
         </div>
         <div class="swiper product-row">
             <div class="swiper-wrapper">
@@ -139,7 +185,7 @@ if ($data = $result->fetch_assoc()) {
                     <a href="#">
                         <img src="images/logo kita.png" alt="Logo">
                     </a>
-                    <h1 class="logoName">Sweet Cake</h1>
+                    <h1 class="logoName">Croquant Cookies</h1>
                 </div>
                 <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
             </div>
@@ -172,17 +218,55 @@ if ($data = $result->fetch_assoc()) {
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper', {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 40,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 50,
+                },
+            },
+        });
 
-    <!-- Custom JS -->
-    <script src="index.js"></script>
+        // JavaScript untuk toggle dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            var profileImage = document.getElementById('profileImage');
+            var dropdownContent = document.querySelector('.dropdown-content');
+
+            profileImage.addEventListener('click', function(event) {
+                dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Menutup dropdown jika mengklik di luar area dropdown
+            window.addEventListener('click', function(event) {
+                if (!event.target.matches('#profileImage')) {
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
 <?php
 } else {
-    echo "Data user tidak ditemukan.";
+    echo "Pengguna tidak ditemukan.";
 }
-
-// Tutup koneksi
-$conn->close();
 ?>

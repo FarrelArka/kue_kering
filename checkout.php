@@ -1,8 +1,8 @@
 <?php
+require_once dirname(__FILE__) . '/vendor/autoload.php';
 include "koneksi.php";
 session_start(); // Mulai sesi
 
-// Cek apakah pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
     echo "Anda harus login terlebih dahulu.";
     exit();
@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Mengambil data keranjang belanja
-$cart_query = "SELECT cart.product_id, cart.quantity, products.name, products.image, products.price 
+$cart_query = "SELECT cart.product_id, cart.quantity, products.name, products.price 
               FROM cart 
               JOIN products ON cart.product_id = products.product_id
               WHERE cart.user_id = ?";
@@ -38,41 +38,24 @@ foreach ($cart_data as $item) {
     $total += $item_total;
 }
 
-if (isset($_POST['checkout'])) {
+// Cek apakah ada request untuk proceed_payment
+if (isset($_POST['proceed_payment'])) {
     $payment_method = $_POST['payment_method'] ?? 'cod';
-    $use_points = isset($_POST['use_points']);
-    $discount = 0;
+    $transfer_method = $_POST['transfer_method'] ?? null;
 
-    // Hitung diskon berdasarkan poin jika checkbox dipilih
-    if ($use_points) {
-        $discount = $poin;
-        $total -= $discount;
-        if ($total < 0) {
-            $total = 0; // Pastikan total tidak kurang dari 0
-        }
-
-        // Update poin pengguna sesuai dengan sisa dari pengurangan
-        $remaining_points = $poin - $discount;
-        if ($remaining_points < 0) {
-            $remaining_points = 0; // Pastikan poin tidak negatif
-        }
-
-        // Update poin pengguna di database
-        $update_poin_query = "UPDATE point SET point = ? WHERE user_id = ?";
-        $stmt = $conn->prepare($update_poin_query);
-        $stmt->bind_param("ii", $remaining_points, $user_id);
-        $stmt->execute();
-    }
+    $discount = min($total, $poin);
+    $remaining_poin = max(0, $poin - $total);
+    $total_final = $total - $discount;
 
     // Mulai transaksi
     $conn->begin_transaction();
 
     try {
         // Insert data ke tabel transaction
-        $status = "pending"; // Status default transaksi
+        $status = 'pending'; // Status awal transaksi
         $transaction_query = "INSERT INTO `transaction` (user_id, payment_method, total_bayar, status, discount) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($transaction_query);
-        $stmt->bind_param("isisi", $user_id, $payment_method, $total, $status, $discount);
+        $stmt->bind_param("isisi", $user_id, $payment_method, $total_final, $status, $discount);
         $stmt->execute();
 
         // Dapatkan ID transaksi yang baru saja dimasukkan
@@ -91,29 +74,67 @@ if (isset($_POST['checkout'])) {
             $stmt->bind_param("ii", $quantity, $product_id);
             $stmt->execute();
 
-            // Masukkan data ke tabel detail_transaction
-            $detail_transaction_query = "INSERT INTO detail_transaction (transaction_id, product_id, quantity, total_bayar) VALUES (?, ?, ?, ?)";
-            $stmt = $conn->prepare($detail_transaction_query);
+            // Masukkan detail transaksi ke tabel detail_transaction
+            $detail_query = "INSERT INTO `detail_transaction` (transaction_id, product_id, quantity, total_bayar) VALUES (?, ?, ?, ?)";
+            $stmt = $conn->prepare($detail_query);
             $stmt->bind_param("iiii", $transaction_id, $product_id, $quantity, $total_item);
             $stmt->execute();
         }
 
-        // Hapus semua item dari cart
+        // Update poin pengguna
+        $update_poin_query = "UPDATE point SET point = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($update_poin_query);
+        $stmt->bind_param("ii", $remaining_poin, $user_id);
+        $stmt->execute();
+
+        // Berikan poin tambahan sebesar 10% dari total bayar
+        $new_points = intval($total_final * 0.10);
+        $add_poin_query = "UPDATE point SET point = point + ? WHERE user_id = ?";
+        $stmt = $conn->prepare($add_poin_query);
+        $stmt->bind_param("ii", $new_points, $user_id);
+        $stmt->execute();
+
+        // Commit transaksi
+        $conn->commit();
+
+        // Hapus semua item dari keranjang pengguna
         $delete_cart_query = "DELETE FROM cart WHERE user_id = ?";
         $stmt = $conn->prepare($delete_cart_query);
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
 
-        // Commit transaksi
-        $conn->commit();
-        header("location:order.php");
+        // Jika menggunakan metode pembayaran selain COD, buat token pembayaran Midtrans
+        if ($payment_method !== 'cod') {
+            \Midtrans\Config::$serverKey = 'SB-Mid-server-x4QiK3PuTSAM5JZ62QH-W-n8';
+            \Midtrans\Config::$isProduction = false;
+            \Midtrans\Config::$isSanitized = true;
+            \Midtrans\Config::$is3ds = true;
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $transaction_id,
+                    'gross_amount' => $total_final,
+                ],
+                'customer_details' => [
+                    'user_id' => $user_id,
+                    // Tambahkan data lain seperti nama, email, dll.
+                ],
+            ];
+
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            $_SESSION['snapToken'] = $snapToken;
+            header("Location: cart.php");
+            exit();
+        } else {
+            // Jika COD, langsung arahkan ke halaman pesanan
+            $_SESSION['message'] = "Checkout berhasil. Pesanan Anda sedang diproses.";
+            header("Location: order.php");
+            exit();
+        }
+
     } catch (Exception $e) {
-        // Rollback jika terjadi kesalahan
         $conn->rollback();
-        echo "Terjadi kesalahan: " . $e->getMessage();
+        echo "Checkout gagal: " . $e->getMessage();
     }
 }
-
-// Tutup koneksi
-$conn->close();
 ?>

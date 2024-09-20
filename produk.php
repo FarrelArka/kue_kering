@@ -2,7 +2,7 @@
 session_start(); // Memulai session
 
 // Cek apakah pengguna sudah login
-if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+if (isset($_SESSION['username']) && isset($_SESSION['role'])) {
     $name = $_SESSION['username'];
     $role = $_SESSION['role'];
 } else {
@@ -10,14 +10,28 @@ if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
     header("Location: login.php");
     exit;
 }
+
 // Koneksi ke database
 include "koneksi.php";
 
-$sql = "SELECT user_id, username, email, alamat, no_hp, role FROM users";
-$result = $conn->query($sql);
+// Query untuk mengambil data pengguna yang sedang login
+$sql = "SELECT user_id, username, email, alamat, no_hp, foto, role FROM users WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $name);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Ambil data pengguna
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+} else {
+    echo "Pengguna tidak ditemukan";
+    exit;
+}
+
 // Query untuk mengambil data dari tabel produk
 $sql = "SELECT product_id, name, description, price, stock, image FROM products";
-$result = $conn->query($sql);
+$resultProduk = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -51,14 +65,11 @@ $result = $conn->query($sql);
 
     <!-- Template Stylesheet -->
     <link href="ADMIN 12/css/styles.css" rel="stylesheet">
+    
 </head>
 
 <body>
     <div class="container-xxl position-relative bg-white d-flex p-0">
-        <!-- Spinner Start -->
-        
-        <!-- Spinner End -->
-
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
@@ -67,7 +78,7 @@ $result = $conn->query($sql);
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                    <img class="rounded-circle me-lg-2" src="<?php echo htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
@@ -89,23 +100,19 @@ $result = $conn->query($sql);
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.php" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
-                </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle me-lg-2" src="<?php echo htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex"><?php echo htmlspecialchars($name); ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="profile_admin.php" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="logout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -120,7 +127,7 @@ $result = $conn->query($sql);
                         <a class='btn btn-sm btn-primary' href='ADMIN 12/tambah_produk.php'>Tambah</a>
                     </div>
                     <div class="table-responsive">
-                    <table class="table">
+                        <table class="table">
                             <thead>
                                 <tr class="text-dark">
                                     <th scope="col">Nama</th>
@@ -133,19 +140,20 @@ $result = $conn->query($sql);
                             </thead>
                             <tbody>
                                 <?php
-                                if ($result->num_rows > 0) {
+                                if ($resultProduk->num_rows > 0) {
                                     // Output data untuk setiap baris
-                                    while($row = $result->fetch_assoc()) {
+                                    while($rowProduk = $resultProduk->fetch_assoc()) {
                                         echo "<tr>";
-                                        echo "<td>" . $row["name"] . "</td>";
-                                        echo "<td>" . $row["description"] . "</td>";
-                                        echo "<td>Rp " . number_format($row["price"], 0, ',', '.') . "</td>";
-                                        echo "<td>" . $row["stock"] . "</td>";
-                                        echo "<td><img src='uploads/" . $row["image"] . "' alt='" . $row["name"] . "' style='width: 40px; height: 40px;'></td>";
+                                        echo "<td>" . $rowProduk["name"] . "</td>";
+                                        echo "<td>" . $rowProduk["description"] . "</td>";
+                                        echo "<td>Rp " . number_format($rowProduk["price"], 0, ',', '.') . "</td>";
+                                        echo "<td>" . $rowProduk["stock"] . "</td>";
+                                        echo "<td><img src='uploads/" . $rowProduk["image"] . "' alt='" . $rowProduk["name"] . "' style='width: 40px; height: 40px;'></td>";
                                         echo "<td>";
-                                        echo "<a class='btn btn-sm btn-primary' href='ADMIN 12/edit_produk.php?id=" . $row["product_id"] . "'>Edit</a>";
-                                        echo"<a class='btn btn-sm btn-danger' style='margin-top: 10px;' href='ADMIN 12/hapus_produk.php?id=" . $row["product_id"] . "' onclick=\"return confirm('Yakin ingin menghapus produk ini?');\">Hapus</a>";
+                                        echo "<a class='btn btn-sm btn-primary' href='ADMIN 12/edit_produk.php?id=" . $rowProduk["product_id"] . "'>Edit</a>";
+                                        echo "<a class='btn btn-sm btn-danger' style='margin-top: 10px;' href='ADMIN 12/hapus_produk.php?id=" . $rowProduk["product_id"] . "' onclick=\"return confirm('Yakin ingin menghapus produk ini?');\">Hapus</a>";
                                         echo "</td>";
+                                        echo "</tr>";
                                     }
                                 } else {
                                     echo "<tr><td colspan='7'>Tidak ada produk</td></tr>";

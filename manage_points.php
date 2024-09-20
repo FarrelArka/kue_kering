@@ -2,24 +2,38 @@
 session_start(); // Memulai session
 
 // Cek apakah pengguna sudah login
-if (!isset($_SESSION['username']) || !isset($_SESSION['role'])) {
+if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+    $name = $_SESSION['username'];
+    $role = $_SESSION['role'];
+} else {
+    // Jika pengguna belum login, redirect ke halaman login atau tampilkan pesan error
     header("Location: login.php");
     exit;
 }
 
-$name = $_SESSION['username'];
-$role = $_SESSION['role'];
-
 // Koneksi ke database
 include "koneksi.php";
 
-// Query untuk mengambil data dari tabel point dan users
+// Query untuk mengambil data pengguna yang sedang login
+$sql = "SELECT user_id, username, email, alamat, no_hp, foto, role FROM users WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $name);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Ambil data pengguna
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+} else {
+    echo "Pengguna tidak ditemukan";
+    exit;
+}
+
+// Query untuk menghitung total produk
 $sql = "SELECT p.user_id, u.username, p.point
         FROM point p
         JOIN users u ON p.user_id = u.user_id";
 $result = $conn->query($sql);
-
-// Cek jika koneksi berhasil
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -66,13 +80,13 @@ if ($conn->connect_error) {
 
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-light navbar-light">
-                <a href="index.php" class="navbar-brand mx-4 mb-3">
+        <nav class="navbar bg-light navbar-light">
+                <a href="index.php" class="navbar-brand mx-2 mb-3">
                     <h3>Croquant Cookies</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle me-lg-2" src="<?php echo htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
@@ -82,7 +96,7 @@ if ($conn->connect_error) {
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="admin.php" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="produk.php" class="nav-item nav-link "><i class="fa fa-table me-2"></i>Produk</a>
+                    <a href="produk.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Produk</a>
                     <a href="manage_order.php" class="nav-item nav-link"><i class="fa fa-edit me-2"></i>Order</a>
                     <a href="manage_points.php" class="nav-item nav-link active"><i class="fa fa-star me-2"></i>Points</a>
                 </div>
@@ -94,23 +108,19 @@ if ($conn->connect_error) {
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.php" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
-                </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="<?php echo htmlspecialchars($row['foto']); ?>" alt="Profile Picture" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex"><?php echo htmlspecialchars($name); ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="profile_admin.php" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="#" class="dropdown-item">Log Out</a>
+                            <a href="logout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -192,6 +202,7 @@ if ($conn->connect_error) {
             </div>
             <!-- Footer End -->
         </div>
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
         <!-- Content End -->
     </div>
 

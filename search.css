@@ -1,0 +1,397 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --black: #1B1722;
+    --white: #F0F0F0;
+    --box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+* {
+    font-family: 'Poppins',sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: .2s linear;
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+    scroll-padding-top: 7rem;
+    scroll-behavior: smooth;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
+html::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: var(--white);
+    border-radius: 5rem;
+}
+
+.header {
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    padding: 1.4rem 7%;
+    z-index: 999;
+}
+
+.header .logoContent {
+    display: flex;
+    align-items: center;
+}
+
+.header .logoContent .logo img {
+    height: 4rem;
+}
+
+.header .logoContent .logoName {
+    color: var(--black);
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
+
+.header .navbar a {
+    font-size: 2rem;
+    margin-right: 3rem;
+    color: var(--black);
+    font-weight: bold;
+}
+.header .navbar a.active {
+    border-bottom: .1rem solid var(--black);
+    padding-bottom: .4rem;
+}
+.header .navbar a:hover {
+    border-bottom: .1rem solid var(--black);
+    padding-bottom: .4rem;
+}
+
+.header .icon i {
+    font-size: 2rem;
+    color: var(--black);
+    cursor: pointer;
+}
+
+.header .search {
+    display: none;
+    top: 100%;
+    margin: 1.5rem 7%;
+    background-color: transparent;
+    width: 50%;
+    right: 0;
+    height: 5rem;
+    position: absolute;
+}
+
+.nav-right {
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-right .icon{
+    display: flex;
+    margin-right: 20px;
+    align-items: center;
+}
+
+.header .search input {
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    background-color: var(--white);
+    color: var(--black);
+    margin-right: 7%;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    box-shadow: var(--box-shadow);
+}
+
+.header .search.active {
+    display: inline-block;
+}
+
+.header .profile img {
+    border-radius: 50%;
+}
+
+#menu-bar {
+    display: none;
+}
+
+
+section {
+    padding: 2rem 7%;
+    margin-top: 8rem;
+}
+
+.heading {
+    text-align: center;
+    font-size: 2.6rem;
+    margin-bottom: 3rem;
+    color: var(--black);
+}
+
+/* New Styles for Product Cards */
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.card {
+    background-color: var(--white);
+    border-radius: 10px; /* Border radius of 15px for smooth rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 350px; /* Increased width to make the card larger */
+    height:400px;
+    padding: 30px; /* Increased padding for a larger feel */
+    text-align: center;
+    transition: 0.3s ease;
+    background-image: url('/mnt/data/card.PNG'); /* Background image */
+    background-size: cover;
+    background-position: center;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.image-container img {
+    border-radius: 50%;
+    width: 120px; /* Increase size of image */
+    height: 120px;
+    object-fit: cover;
+}
+
+.content h3 {
+    font-size: 2rem; /* Increased font size */
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--black);
+}
+
+.content p {
+    font-size: 1.6rem; /* Slightly increased font size */
+    margin-bottom: 20px;
+    color: var(--black);
+}
+
+.content button {
+    background-color: #0f0f0f;
+    color: white;
+    border: none;
+    padding: 12px 25px; /* Increased button size */
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.content button:hover {
+    background-color: #555;
+}
+
+.product h1 {
+    font-size: 50px;
+    text-align: center;
+    color: var(--black);
+}
+
+.product .product-row {
+    margin-bottom: 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product .product-row .box {
+    display: flex;
+    flex-direction: column;
+    width: 25rem; /* Adjust width */
+    background-color: var(--white);
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    gap: 1.5rem;
+    border-radius: 3rem;
+    margin: 1rem; /* Adjust margin */
+    box-shadow: var(--box-shadow); /* Added shadow for better look */
+}
+
+.product .product-row .img img {
+    height: 15rem; /* Adjust height */
+    width: auto; /* Maintain aspect ratio */
+}
+
+.product .product-row .img img:hover {
+    transform: scale(1.05); /* Adjust scale for hover */
+}
+
+.product .product-row .product-content h3 {
+    font-size: 2.5rem; /* Adjust font size */
+    color: var(--black);
+}
+
+.product .product-row .product-content p {
+    font-size: 1.4rem; /* Adjust font size */
+    line-height: 1.6;
+    color: var(--black);
+}
+
+.product .product-row .product-content .orderNow {
+    margin-top: 2rem;
+}
+
+.product .product-row .product-content .orderNow button {
+    font-size: 1.6rem; /* Adjust font size */
+    background-color: var(--black);
+    color: var(--white);
+    border-radius: .7rem;
+    padding: .7rem 2rem;
+    cursor: pointer;
+}
+
+.product .product-row .product-content .orderNow button:hover {
+    background-color: #333; /* Darker shade on hover */
+}
+
+.blogs {
+    background: url(images/backGround.png) no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+.blogs .blogs-row .box {
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    flex-wrap: wrap;
+}
+
+.blogs .blogs-row .box .img {
+    flex: 1 1 45rem;
+}
+
+.blogs .blogs-row .box .img img {
+    width: 100%;
+    padding: 5rem;
+}
+
+.blogs .blogs-row .box .content {
+    flex: 1 1 45rem;
+    padding: 2rem;
+}
+
+.blogs .blogs-row .box .content h3 {
+    font-size: 3.5rem;
+    color: var(--black);
+    text-shadow: var(--box-shadow);
+}
+
+.blogs .blogs-row .box .content p {
+    font-size: 1.6rem;
+    color: var(--black);
+    padding: 1rem 0;
+    line-height: 1.8;
+}
+
+.blogs .blogs-row .box .content a {
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.blogs .blogs-row .box .content a:hover {
+    color: var(--black);
+    text-shadow: var(--box-shadow);
+}
+
+.about {
+    background: url(images/new.jpg) no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    height: 500px;
+}
+
+.about h2 {
+    font-size: 50px;
+    text-align: center;
+    color: #F0F0F0;
+    padding: 40px;
+}
+
+.about h3 {
+    font-size: 30px;
+    text-align: center;
+    color: #F0F0F0;
+    padding: 10px;
+    margin-top: 30px;
+}
+
+.review .review-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.review .review-row .box {
+    width: 50%;
+    margin-bottom: 3rem;
+    padding: 3rem;
+    border-radius: 3rem;
+    background-color: var(--white);
+    box-shadow: var(--box-shadow);
+}
+
+.review .review-row .box .client-review {
+    margin-bottom: 3rem;
+}
+
+.review .review-row .box .client-review p {
+    text-align: center;
+    font-size: 2.5rem;
+    line-height: 1.5;
+}
+
+.review .review-row .box .client-info {
+    display: flex;
+    align-items: center;
+}
+
+.review .review-row .box .client-info .client-img {
+    margin-right: 2rem;
+}
+
+.review .review-row .box .client-info .client-img img {
+    height: 7rem;
+    width: 7rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.review .review-row .box .client-info .client-name {
+    color: var(--black);
+}
+
+.review .review-row .box .client-info .client-name h3 {
+    font-size: 1.8rem;
+}
+
+.review .review-row .box .client-info .client-name p {
+    font-size: 1.6rem;
+}
