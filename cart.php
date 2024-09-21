@@ -213,7 +213,6 @@ if (isset($_SESSION['snapToken'])) {
                         <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
                         <div class="item-details">
                             <h3><?php echo htmlspecialchars($item['name']); ?></h3>
-                            <p>Deskripsi singkat produk</p>
                         </div>
                     </div>
                     <div class="item-quantity">
@@ -276,43 +275,7 @@ if (isset($_SESSION['snapToken'])) {
 
         </div>
     </div>
-    <footer class="footer" id="contact">
-        <div class="box-container">
-            <div class="mainBox">
-                <div class="content">
-                    <a href="#">
-                        <img src="images/logo kita.png" alt="Logo">
-                    </a>
-                    <h1 class="logoName">Croquant Cookies</h1>
-                </div>
-                <p>Kue kering lezat untuk semua. Nikmati kelezatan dalam setiap gigitan, sempurna untuk momen istimewa.</p>
-            </div>
-            <div class="box">
-                <h3>Link Cepat</h3>
-                <a href="user.php"> <i class="fas fa-arrow-right"></i>Beranda</a>
-                <a href="product.php"> <i class="fas fa-arrow-right"></i>Produk</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Blog</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Umpan Balik</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Kontak</a>
-            </div>
-            <div class="box">
-                <h3>Link Ekstra</h3>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Info Akun</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Pesanan</a>
-                <a href="#"> <i class="fas fa-arrow-right"></i>Metode Pembayaran</a>
-            </div>
-            <div class="box">
-                    <h3>Contact Info</h3>
-                    <a href="#"> <i class="fas fa-phone"></i>+62 896 0262 3481</a>
-                    <a href="#"> <i
-                            class="fas fa-envelope"></i>croquant.cookies00@gmail.com</a>
-
-                </div>
-        </div>
-        <div class="credit">
-            Created by <span>Farrel Arkana</span> | @CroquantCookies        
-        </div>
-    </footer>
+    
 
     <?php if ($message): ?>
         <script>

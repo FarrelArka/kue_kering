@@ -38,7 +38,7 @@ $conn->close();
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
+        }   
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -82,7 +82,7 @@ $conn->close();
                     <span><?php echo htmlspecialchars($email); ?></span>
                 </div>
 
-                <a href="edit_profile.php" class="btn btn-primary mt-3">Edit Profile</a>
+                        
             <a href="user.php"class="btn btn-secondary mt-2">Back</a>
             </div>
         </div>
