@@ -89,7 +89,7 @@ if ($data = $result->fetch_assoc()) {
         </div>
 
         <nav class="navbar">
-            <a href="user.php">Beranda</a>
+            <a href="user.php" active>Beranda</a>
             <a href="product.php">Produk</a>
             <a href="cart.php">Keranjang</a>
             <a href="order.php">Pesanan</a>
@@ -262,6 +262,7 @@ if ($data = $result->fetch_assoc()) {
             });
         });
     </script>
+    <script src="aktif.js"></script>
 </body>
 </html>
 

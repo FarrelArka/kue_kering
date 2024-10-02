@@ -93,7 +93,7 @@ if ($conn->connect_error) {
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="admin.php" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="admin.php" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="produk.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Produk</a>
                     <a href="manage_order.php" class="nav-item nav-link active"><i class="fa fa-edit me-2"></i>Order</a>
                     <a href="manage_points.php" class="nav-item nav-link"><i class="fa fa-star me-2"></i>Points</a>
@@ -117,7 +117,6 @@ if ($conn->connect_error) {
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="profile_admin.php" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
                             <a href="logout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
@@ -155,7 +154,7 @@ if ($conn->connect_error) {
                                         echo "<td>".$row['user_id']."</td>";
                                         echo "<td>".$row['transaction_date']."</td>";
                                         echo "<td>".$row['payment_method']."</td>";
-                                        echo "<td>$".$row['total_bayar']."</td>";
+                                        echo "<td>Rp".$row['total_bayar']."</td>";
                                         echo "<td>
                                                 <form action='ADMIN 12/update_order.php' method='POST'>
                                                     <input type='hidden' name='transaction_id' value='".$row['transaction_id']."'>

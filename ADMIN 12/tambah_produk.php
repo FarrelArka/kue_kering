@@ -47,14 +47,14 @@
             font-weight: bold;
         }
         .btn-primary {
-            background-color: #343a40;
-            border-color: #343a40;
-            border-radius: 0.5rem;
+            background-color: #010101;
+            border: none;
             transition: background-color 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #495057;
-            border-color: #495057;
+            background-color: #f3f3f3;
+            border:none;
+            color:#010101;
         }
         .icon-upload {
             color: #6c757d;
@@ -73,6 +73,18 @@
             font-size: 1.2rem;
             padding: 10px 20px;
         }
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none !important; 
+            box-shadow: none !important; 
+            border-color: #ced4da !important; 
+        }
+
+        h3 {
+            margin-top: .5rem !important;
+        }
+
     </style>
 </head>
 

@@ -136,7 +136,7 @@ html::-webkit-scrollbar {
 .cart {
     background: #fafafa;
     padding: 2em;
-    margin-top: 1em;
+    margin-top: 9em;
     border-radius: 12px;
     box-shadow: var(--box-shadow);
 }

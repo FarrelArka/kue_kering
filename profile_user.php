@@ -82,7 +82,7 @@ $conn->close();
                     <span><?php echo htmlspecialchars($email); ?></span>
                 </div>
 
-                        
+                <a href="edit_profile.php"class="btn btn-primary mt-2">Edit Profile</a>  
             <a href="user.php"class="btn btn-secondary mt-2">Back</a>
             </div>
         </div>

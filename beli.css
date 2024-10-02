@@ -183,10 +183,11 @@ section{
     font-size: 4rem;
     color: var(--black);
 }
-.product .product-row .product-content p{
+.product .product-row .product-content p {
     font-size: 1.5rem;
     line-height: 1.6;
     color: var(--black);
+    text-align: justify;
 }
 .product .product-row .product-content .orderNow{
     height: 3rem;

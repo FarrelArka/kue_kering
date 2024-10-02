@@ -89,7 +89,7 @@ if ($stokKosongResult->num_rows > 0) {
 
         <!-- Content Start -->
         <div class="content">
-            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+        <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
@@ -101,7 +101,6 @@ if ($stokKosongResult->num_rows > 0) {
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="profile_admin.php" class="dropdown-item">My Profile</a>
-                            <a href="#" class="dropdown-item">Settings</a>
                             <a href="logout.php" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
@@ -201,8 +200,23 @@ if ($stokKosongResult->num_rows > 0) {
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="ADMIN 12/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="ADMIN 12/lib/chart/chart.min.js"></script>
+    <script src="ADMIN 12/lib/easing/easing.min.js"></script>
+    <script src="ADMIN 12/lib/waypoints/waypoints.min.js"></script>
+    <script src="ADMIN 12/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="ADMIN 12/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="ADMIN 12/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="ADMIN 12/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
     <script src="ADMIN 12/js/main.js"></script>
+    <script>
+        // Fungsi untuk menghilangkan spinner saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('spinner').style.display = 'none';
+        });
+    </script>
 </body>
 </html>

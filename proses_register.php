@@ -40,7 +40,16 @@ $sql = "INSERT INTO users (username, email, alamat, no_hp, password, foto, role)
 VALUES ('$username', '$email', '$address', '$phone', '$hashed_password', '$upload_file', 'user')";
 
 if ($conn->query($sql) === TRUE) {
-    header("location:login.html");
+    // Ambil user_id dari pengguna yang baru saja dimasukkan
+    $user_id = $conn->insert_id;
+
+    // Masukkan user_id dan point = 0 ke tabel point
+    $sql_point = "INSERT INTO point (user_id, point) VALUES ('$user_id', 0)";
+    if ($conn->query($sql_point) === TRUE) {
+        header("location:login.html");
+    } else {
+        echo "Error: " . $sql_point . "<br>" . $conn->error;
+    }
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }

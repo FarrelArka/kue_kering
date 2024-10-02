@@ -34,13 +34,16 @@ if ($data = $result->fetch_assoc()) {
 
     // Mengatur order berdasarkan transaction_id
     $orders = [];
+    $sequential_id = 1; // Inisialisasi sequential_id
     while ($row = $orders_result->fetch_assoc()) {
         $transaction_id = $row['transaction_id'];
         if (!isset($orders[$transaction_id])) {
             $orders[$transaction_id] = [
                 'status' => $row['status'],
-                'items' => []
+                'items' => [],
+                'sequential_id' => $sequential_id // Menambahkan sequential_id
             ];
+            $sequential_id++; // Increment sequential_id
         }
         $orders[$transaction_id]['items'][] = [
             'image' => $row['image'],
@@ -142,9 +145,9 @@ if ($data = $result->fetch_assoc()) {
     <div class="container">
         <h1>Order Status</h1>
         <div class="order-list">
-            <?php foreach ($orders as $transaction_id => $order) { ?>
-            <div class="order-item" onclick="openPopup('<?php echo $transaction_id; ?>')">
-                <h2>Order <?php echo htmlspecialchars($transaction_id); ?></h2>
+        <?php foreach ($orders as $transaction_id => $order) { ?>
+            <div class="order-item" onclick="openPopup('<?php echo $order['sequential_id']; ?>')">
+                <h2>Order <?php echo htmlspecialchars($order['sequential_id']); ?></h2>
                 <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
                 <div class="order-images">
                     <?php foreach ($order['items'] as $item) { ?>
@@ -152,16 +155,17 @@ if ($data = $result->fetch_assoc()) {
                     <?php } ?>
                 </div>
             </div>
-            <?php } ?>
+        <?php } ?>
         </div>
     </div>
 
+
     <!-- Pop-up Detail Order -->
     <?php foreach ($orders as $transaction_id => $order) { ?>
-    <div id="<?php echo $transaction_id; ?>" class="popup">
+    <div id="<?php echo $order['sequential_id']; ?>" class="popup">
         <div class="popup-content">
-            <span class="close" onclick="closePopup('<?php echo $transaction_id; ?>')">&times;</span>
-            <h2>Order <?php echo htmlspecialchars($transaction_id); ?></h2>
+            <span class="close" onclick="closePopup('<?php echo $order['sequential_id']; ?>')">&times;</span>
+            <h2>Order <?php echo htmlspecialchars($order['sequential_id']); ?></h2>
             <?php foreach ($order['items'] as $item) { ?>
             <div class="popup-item">
                 <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
@@ -175,9 +179,8 @@ if ($data = $result->fetch_assoc()) {
             <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
         </div>
     </div>
+    <?php } ?>
 
-
-    <?php } ?>  
     <footer class="footer" id="contact">
         <div class="box-container">
             <div class="mainBox">

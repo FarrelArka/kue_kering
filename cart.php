@@ -157,7 +157,7 @@ if (isset($_SESSION['snapToken'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="troli.css">
+    <link rel="stylesheet" href="cart.css">
 
     <!-- Midtrans Snap.js -->
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="YOUR_CLIENT_KEY"></script>
