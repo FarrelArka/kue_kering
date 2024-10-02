@@ -65,7 +65,7 @@ if ($data = $result->fetch_assoc()) {
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="pesenan.css">
+    <link rel="stylesheet" href="order.css">
 <style>
             .profile {
             position: relative;

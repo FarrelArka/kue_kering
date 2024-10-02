@@ -2,26 +2,45 @@
 session_start();
 include 'koneksi.php'; // Koneksi ke database
 
-// Ambil data dari form
+// Pastikan pengguna sudah login
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
 $user_id = $_SESSION['user_id'];
+
+// Ambil data dari form
 $username = $_POST['username'];
 $email = $_POST['email'];
 $no_hp = $_POST['no_hp'];
 $alamat = $_POST['alamat'];
+$foto_lama = $_POST['foto_lama'];
 
-// Upload foto baru jika ada
+// Proses upload foto profil jika ada file yang diupload
 if ($_FILES['foto']['name']) {
     $foto = 'uploads/' . basename($_FILES['foto']['name']);
     move_uploaded_file($_FILES['foto']['tmp_name'], $foto);
 } else {
-    $foto = $_POST['foto_lama'];
+    $foto = $foto_lama;
 }
 
-// Update data user di database
-$query = "UPDATE users SET username = '$username', email = '$email', no_hp = '$no_hp', alamat = '$alamat', foto = '$foto' WHERE user_id = $user_id";
-mysqli_query($conn, $query);
+// Update data pengguna di database
+$query = "UPDATE users SET username = ?, email = ?, no_hp = ?, alamat = ?, foto = ? WHERE user_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("sssssi", $username, $email, $no_hp, $alamat, $foto, $user_id);
 
-// Redirect ke halaman profil
-header('Location: edit_profile_admin.php');
-exit();
+if ($stmt->execute()) {
+    // Update session data
+    $_SESSION['username'] = $username;
+
+    // Redirect ke halaman profil
+    header('Location: profile_admin.php');
+    exit();
+} else {
+    echo "Error updating record: " . $stmt->error;
+}
+
+$stmt->close();
+$conn->close();
 ?>

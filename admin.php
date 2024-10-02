@@ -63,7 +63,7 @@ if ($stokKosongResult->num_rows > 0) {
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-light navbar-light">
+        <nav class="navbar bg-light navbar-light">
                 <a href="index.php" class="navbar-brand mx-2 mb-3">
                     <h3>Croquant Cookies</h3>
                 </a>
@@ -81,7 +81,7 @@ if ($stokKosongResult->num_rows > 0) {
                     <a href="admin.php" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="produk.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Produk</a>
                     <a href="manage_order.php" class="nav-item nav-link"><i class="fa fa-edit me-2"></i>Order</a>
-                    <a href="manage_points.php" class="nav-item nav-link"><i class="fa fa-star me-2"></i>Points</a>
+                    <a href="manage_points.php" class="nav-item nav-link "><i class="fa fa-star me-2"></i>Points</a>
                 </div>
             </nav>
         </div>
@@ -89,7 +89,8 @@ if ($stokKosongResult->num_rows > 0) {
 
         <!-- Content Start -->
         <div class="content">
-        <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>

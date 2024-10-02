@@ -75,7 +75,7 @@ if ($data = $result->fetch_assoc()) {
         }
     </style>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="beli.css">
+    <link rel="stylesheet" href="belis.css">
 </head>
 <body>
 
