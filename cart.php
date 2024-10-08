@@ -149,6 +149,17 @@ if (isset($_SESSION['snapToken'])) {
             text-decoration: none;
             cursor: pointer;
         }
+        .item-remove .delete-button {
+    background: none;
+    border: none;
+    color: black;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.item-remove .delete-button:hover {
+    color: darkred;
+}
     </style>
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
@@ -208,23 +219,30 @@ if (isset($_SESSION['snapToken'])) {
                 <span>Jumlah Item: <?php echo count($cart_data); ?></span>
             </div>
             <?php foreach ($cart_data as $item): ?>
-                <div class="cart-item">
-                    <div class="item-info">
-                        <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
-                        <div class="item-details">
-                            <h3><?php echo htmlspecialchars($item['name']); ?></h3>
-                        </div>
-                    </div>
-                    <div class="item-quantity">
-                        <form method="POST" action="update_quantity.php">
-                            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
-                            <input type="number" name="quantity" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1">
-                            <button type="submit" name="update_quantity">Update</button>
-                        </form>
-                    </div>
-                    <div class="item-price">Rp. <?php echo number_format($item['price'], 0, ',', '.'); ?></div>
-                </div>
-            <?php endforeach; ?>
+    <div class="cart-item">
+        <div class="item-info">
+            <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+            <div class="item-details">
+                <h3><?php echo htmlspecialchars($item['name']); ?></h3>
+            </div>
+        </div>
+        <div class="item-quantity">
+            <form method="POST" action="update_quantity.php">
+                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
+                <input type="number" name="quantity" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1">
+                <button type="submit" name="update_quantity">Update</button>
+            </form>
+        </div>
+        <div class="item-price">Rp. <?php echo number_format($item['price'], 0, ',', '.'); ?></div>
+        <div class="item-remove">
+            <form method="POST" action="delete_item.php">
+                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['product_id']); ?>">
+                <button type="submit" name="delete_item" class="delete-button">&times;</button>
+            </form>
+        </div>
+    </div>
+<?php endforeach; ?>
+
             <div class="cart-total">
                 <h3>Total Harga: Rp. <?php echo number_format($total, 0, ',', '.'); ?></h3>
             </div>

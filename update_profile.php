@@ -22,6 +22,6 @@ $query = "UPDATE users SET username = '$username', email = '$email', no_hp = '$n
 mysqli_query($conn, $query);
 
 // Redirect ke halaman profil
-header('Location: edit_profile.php');
+header('Location: profile_user.php');
 exit();
 ?>

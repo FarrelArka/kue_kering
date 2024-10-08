@@ -263,6 +263,7 @@ if ($data = $result->fetch_assoc()) {
         });
     </script>
     <script src="aktif.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
 

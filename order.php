@@ -10,6 +10,15 @@ if (!isset($_SESSION['user_id'])) {
 
 // Ambil ID pengguna dari sesi
 $id = $_SESSION['user_id'];
+if (isset($_SESSION['message'])) {
+    echo "<script>alert('" . $_SESSION['message'] . "');</script>";
+    unset($_SESSION['message']); // Clear the message after displaying it
+}
+
+if (isset($_SESSION['error'])) {
+    echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+    unset($_SESSION['error']); // Clear the error after displaying it
+}
 
 // Mengambil data pengguna berdasarkan ID pengguna yang login
 $query = "SELECT * FROM users WHERE user_id=?";
@@ -104,6 +113,42 @@ if ($data = $result->fetch_assoc()) {
         .profile:hover .dropdown-content {
             display: block;
         }
+        .cancel-button {
+    background-color: #292929;
+    font-weight: 500;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.cancel-button:hover {
+    background-color: #757575;
+}
+.order-item {
+    position: relative;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}   
+.delete-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: black;
+}
+
+.delete-button:hover {
+    color: #757575;
+}
+
 </style>
    
 </head>
@@ -145,41 +190,58 @@ if ($data = $result->fetch_assoc()) {
     <div class="container">
         <h1>Order Status</h1>
         <div class="order-list">
-        <?php foreach ($orders as $transaction_id => $order) { ?>
-            <div class="order-item" onclick="openPopup('<?php echo $order['sequential_id']; ?>')">
-                <h2>Order <?php echo htmlspecialchars($order['sequential_id']); ?></h2>
-                <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
-                <div class="order-images">
-                    <?php foreach ($order['items'] as $item) { ?>
-                        <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
-                    <?php } ?>
-                </div>
-            </div>
+       <!-- Inside the foreach loop for orders -->
+<!-- Inside the foreach loop for orders -->
+<?php foreach ($orders as $transaction_id => $order) { ?>
+    <div class="order-item" onclick="openPopup('<?php echo $order['sequential_id']; ?>')">
+        <h2>Order <?php echo htmlspecialchars($order['sequential_id']); ?></h2>
+        <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
+        <div class="order-images">
+            <?php foreach ($order['items'] as $item) { ?>
+                <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
+            <?php } ?>
+        </div>
+        <!-- Delete Order Button -->
+        <?php if ($order['status'] === 'selesai' || $order['status'] === 'cancelled') { // Check if the order is completed or cancelled ?>
+            <form action="delete_order.php" method="post" onsubmit="return confirm('Are you sure you want to delete this order?');" style="display:inline;">
+                <input type="hidden" name="transaction_id" value="<?php echo $transaction_id; ?>">
+                <button type="submit" class="delete-button">✖</button>
+            </form>
         <?php } ?>
+    </div>
+<?php } ?>
+
+
         </div>
     </div>
 
 
     <!-- Pop-up Detail Order -->
     <?php foreach ($orders as $transaction_id => $order) { ?>
-    <div id="<?php echo $order['sequential_id']; ?>" class="popup">
-        <div class="popup-content">
-            <span class="close" onclick="closePopup('<?php echo $order['sequential_id']; ?>')">&times;</span>
-            <h2>Order <?php echo htmlspecialchars($order['sequential_id']); ?></h2>
-            <?php foreach ($order['items'] as $item) { ?>
-            <div class="popup-item">
-                <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
-                <div class="pop-up-anjay">
-                    <p>Product: <?php echo htmlspecialchars($item['name']); ?></p>
-                    <p>Quantity: <?php echo htmlspecialchars($item['quantity']); ?></p>
-                    <p>Total Bayar: <?php echo htmlspecialchars($item['total_bayar']); ?></p>
-                </div>
+<div id="<?php echo $order['sequential_id']; ?>" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup('<?php echo $order['sequential_id']; ?>')">&times;</span>
+        <h2>Order <?php echo htmlspecialchars($order['sequential_id']); ?></h2>
+        <?php foreach ($order['items'] as $item) { ?>
+        <div class="popup-item">
+            <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
+            <div class="pop-up-anjay">
+                <p>Product: <?php echo htmlspecialchars($item['name']); ?></p>
+                <p>Quantity: <?php echo htmlspecialchars($item['quantity']); ?></p>
+                <p>Total Bayar: <?php echo htmlspecialchars($item['total_bayar']); ?></p>
             </div>
-            <?php } ?>
-            <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
         </div>
+        <?php } ?>
+        <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
+        <!-- Cancel Order Button -->
+        <form action="cancel_order.php" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+            <input type="hidden" name="transaction_id" value="<?php echo $transaction_id; ?>">
+            <button type="submit" class="cancel-button">Cancel Order</button>
+        </form>
     </div>
-    <?php } ?>
+</div>
+<?php } ?>
+
 
     <footer class="footer" id="contact">
         <div class="box-container">
