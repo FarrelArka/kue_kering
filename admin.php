@@ -2,7 +2,7 @@
 session_start(); // Memulai session
 
 // Cek apakah pengguna sudah login
-if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+if (isset($_SESSION['username']) && isset($_SESSION['role'])) {
     $name = $_SESSION['username'];
     $role = $_SESSION['role'];
 } else {
@@ -46,13 +46,28 @@ if ($stokKosongResult->num_rows > 0) {
     $stokKosongRow = $stokKosongResult->fetch_assoc();
     $stokKosong = $stokKosongRow['stok_kosong'];
 }
+
+// Hapus pengguna yang dipilih
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_selected'])) {
+    if (!empty($_POST['selected_users'])) {
+        $userIds = implode(",", array_map('intval', $_POST['selected_users']));
+        $deleteSql = "DELETE FROM users WHERE user_id IN ($userIds)";
+        if ($conn->query($deleteSql) === TRUE) {
+            echo "Pengguna yang dipilih berhasil dihapus.";
+        } else {
+            echo "Error deleting record: " . $conn->error;
+        }
+    } else {
+        echo "Tidak ada pengguna yang dipilih.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Produk - Croquant Cookies</title>
+    <title>Admin - Croquant Cookies</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="img/favicon.ico" rel="icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -63,7 +78,7 @@ if ($stokKosongResult->num_rows > 0) {
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
-        <nav class="navbar bg-light navbar-light">
+            <nav class="navbar bg-light navbar-light">
                 <a href="index.php" class="navbar-brand mx-2 mb-3">
                     <h3>Croquant Cookies</h3>
                 </a>
@@ -81,7 +96,7 @@ if ($stokKosongResult->num_rows > 0) {
                     <a href="admin.php" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="produk.php" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Produk</a>
                     <a href="manage_order.php" class="nav-item nav-link"><i class="fa fa-edit me-2"></i>Order</a>
-                    <a href="manage_points.php" class="nav-item nav-link "><i class="fa fa-star me-2"></i>Points</a>
+                    <a href="manage_points.php" class="nav-item nav-link"><i class="fa fa-star me-2"></i>Points</a>
                 </div>
             </nav>
         </div>
@@ -140,70 +155,72 @@ if ($stokKosongResult->num_rows > 0) {
                         <h6 class="mb-0">Recent Sales</h6>
                         <a href="">Show All</a>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">User</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Alamat</th>
-                                    <th scope="col">No Hp</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $sql = "SELECT user_id, username, email, alamat, no_hp, role FROM users";
-                                $result = $conn->query($sql);
+                    <form method="post" action="delete_selected.php">
+                        <div class="table-responsive">
+                            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                                <thead>
+                                    <tr class="text-dark">
+                                        <th scope="col"><input class="form-check-input" type="checkbox" id="selectAll"></th>
+                                        <th scope="col">User</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">No Hp</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+    <?php
+    $sql = "SELECT user_id, username, email, alamat, no_hp, role FROM users";
+    $result = $conn->query($sql);
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<tr>";
-                                        echo '<td><input class="form-check-input" type="checkbox"></td>';
-                                        echo "<td>" . htmlspecialchars($row["username"]) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row["email"]) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row["alamat"]) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row["no_hp"]) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
-                                        echo "<td><a class='btn btn-sm btn-primary' href='edit_user.php?id=" . htmlspecialchars($row["user_id"]) . "'>Edit</a> 
-                                              <a class='btn btn-sm btn-danger' href='delete_user.php?id=" . htmlspecialchars($row["user_id"]) . "'>Delete</a></td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='7'>No results found</td></tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo '<td><input class="form-check-input" type="checkbox" name="selected_users[]" value="' . htmlspecialchars($row["user_id"]) . '"></td>';
+            echo "<td>" . htmlspecialchars($row["username"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["email"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["alamat"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["no_hp"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["role"]) . "</td>";
+            echo "<td><a href='edit_user.php?user_id=" . htmlspecialchars($row["user_id"]) . "' class='btn btn-sm btn-primary'>Edit</a>
+            <a href='#' onclick='confirmDelete(" . htmlspecialchars($row["user_id"]) . ")' class='btn btn-sm btn-danger'>Hapus</a></td>";
+
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='7'>No users found</td></tr>";
+    }
+    ?>
+</tbody>
+
+                            </table>
+                        </div>
+                        <button type="submit" name="delete_selected" class="btn btn-danger mt-3">Delete Selected</button>
+                    </form>
                 </div>
             </div>
             <!-- Recent Sales End -->
-              <!-- Footer Start -->
+
+            <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
                             &copy; <a href="#">Croquant Cookies</a>, All Right Reserved.
                         </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!-- Credits removed -->
-                        </div>
+                       
                     </div>
                 </div>
             </div>
+            <!-- Footer End -->
         </div>
         <!-- Content End -->
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
     </div>
 
+    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="ADMIN 12/lib/chart/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="ADMIN 12/lib/easing/easing.min.js"></script>
     <script src="ADMIN 12/lib/waypoints/waypoints.min.js"></script>
     <script src="ADMIN 12/lib/owlcarousel/owl.carousel.min.js"></script>
@@ -214,10 +231,21 @@ if ($stokKosongResult->num_rows > 0) {
     <!-- Template Javascript -->
     <script src="ADMIN 12/js/main.js"></script>
     <script>
-        // Fungsi untuk menghilangkan spinner saat halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('spinner').style.display = 'none';
-        });
+    function confirmDelete(userId) {
+        if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
+            window.location.href = "delete_user.php?user_id=" + userId;
+        }
+    }
+</script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        document.getElementById('selectAll').onclick = function() {
+            var checkboxes = document.getElementsByName('selected_users[]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        }
     </script>
 </body>
 </html>

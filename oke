@@ -1,0 +1,44 @@
+<?php
+session_start(); // Memulai session
+
+// Cek apakah pengguna sudah login dan memiliki role admin
+if (isset($_SESSION['username']) && $_SESSION['role'] == 'admin') {
+    $name = $_SESSION['username'];
+    $role = $_SESSION['role'];
+} else {
+    // Jika pengguna belum login atau bukan admin, redirect ke halaman login
+    header("Location: login.php");
+    exit;
+}
+
+// Koneksi ke database
+include "koneksi.php";
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$user = null; // Inisialisasi variabel $user
+
+if (isset($_GET['user_id'])) {
+    $userId = $_GET['user_id'];
+
+    // Query untuk mengambil data pengguna yang akan diedit
+    $sql = "SELECT user_id, username, email, alamat, no_hp, role FROM users WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    } else {
+        echo "Pengguna tidak ditemukan.";
+        exit; // Hentikan eksekusi jika pengguna tidak ditemukan
+    }
+    
+    $stmt->close();
+} else {
+    echo "ID pengguna tidak diberikan.";
+    exit; // Hentikan eksekusi jika user_id tidak ada
+}
+?>

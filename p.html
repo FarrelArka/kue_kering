@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom File Input</title>
+    <style>
+        .file-input {
+    display: none; /* Menyembunyikan elemen input asli */
+}
+
+.file-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.file-label:hover {
+    background-color: #0056b3;
+}
+
+    </style>    
+</head>
+<body>
+    <div class="file-upload">
+        <input type="file" id="file" class="file-input" />
+        <label for="file" class="file-label">Upload File</label>
+    </div>
+
+    <script>
+        document.querySelector('.file-input').addEventListener('change', function() {
+    const fileName = this.files[0].name;
+    document.querySelector('.file-label').textContent = fileName;
+});
+
+    </script>
+</body>
+</html>

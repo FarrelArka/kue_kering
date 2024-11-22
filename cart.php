@@ -278,14 +278,27 @@ if (isset($_SESSION['snapToken'])) {
                             </div>
                         </div>
                         <div class="discount-options">
-                            <h6>Gunakan Diskon Poin Anda</h6>
-                            <p>Poin Anda: <?php echo htmlspecialchars($poin); ?></p>
-                            <label><input type="checkbox" name="use_points" id="use_points" value="yes"> <span style="font-weight: bold;">Gunakan poin untuk diskon</span></label>
-                        </div>
-                        <div class="modal-footer">
-                            <p>Total Bayar: Rp. <span id="totalBayar"><?php echo number_format($total, 0, ',', '.'); ?></span></p>
-                            <button type="submit" name="proceed_payment" class="btn-popup">Lanjutkan Pembayaran</button>
-                        </div>
+    <h6>Gunakan Diskon Poin Anda</h6>
+    <p>Poin Anda: <?php echo htmlspecialchars($poin); ?></p>
+    <label>
+        <input type="checkbox" name="apply_points" value="1" id="applyPointsCheckbox"> Gunakan poin untuk diskon
+    </label>
+</div>
+<div class="modal-footer">
+    <p>Total Bayar: Rp. <span id="totalBayar"><?php echo number_format($total, 0, ',', '.'); ?></span></p>
+    <button type="submit" name="proceed_payment" class="btn-popup">Lanjutkan Pembayaran</button>
+</div>
+
+<script>
+document.getElementById('applyPointsCheckbox').addEventListener('change', function() {
+    var total = <?php echo $total; ?>;
+    var poin = <?php echo $poin; ?>;
+    var discount = this.checked ? Math.min(total, poin) : 0;
+    var totalBayar = total - discount;
+    document.getElementById('totalBayar').innerText = totalBayar.toLocaleString('id-ID');
+});
+</script>
+
                     </form>
                 </div>
             </div>

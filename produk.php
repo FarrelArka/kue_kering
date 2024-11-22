@@ -65,7 +65,10 @@ $resultProduk = $conn->query($sql);
 
     <!-- Template Stylesheet -->
     <link href="ADMIN 12/css/styles.css" rel="stylesheet">
-    
+    <style>.justify-text {
+    text-align: justify;
+}
+</style>
 </head>
 
 <body>
@@ -143,8 +146,8 @@ $resultProduk = $conn->query($sql);
                                     // Output data untuk setiap baris
                                     while($rowProduk = $resultProduk->fetch_assoc()) {
                                         echo "<tr>";
-                                        echo "<td>" . $rowProduk["name"] . "</td>";
-                                        echo "<td>" . $rowProduk["description"] . "</td>";
+                                        echo "<td class='justify-text'>" . $rowProduk["name"] . "</td>";
+                                        echo "<td class='justify-text'>" . $rowProduk["description"] . "</td>";
                                         echo "<td>Rp " . number_format($rowProduk["price"], 0, ',', '.') . "</td>";
                                         echo "<td>" . $rowProduk["stock"] . "</td>";
                                         echo "<td><img src='uploads/" . $rowProduk["image"] . "' alt='" . $rowProduk["name"] . "' style='width: 40px; height: 40px;'></td>";

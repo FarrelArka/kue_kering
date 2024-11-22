@@ -1,93 +1,196 @@
 <?php
 session_start();
-include 'koneksi.php'; // Include your database connection file
+include 'koneksi.php'; // Koneksi ke database
 
-// Assuming user ID is stored in the session
-$userId = $_SESSION['user_id'];
+// Pastikan pengguna sudah login
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
 
-// Fetch user profile data from the database
-$query = "SELECT username, email, no_hp, foto FROM users WHERE user_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$stmt->bind_result($username, $email, $hp, $profilePicture);
-$stmt->fetch();
-$stmt->close();
-$conn->close();
+$user_id = $_SESSION['user_id'];
+
+// Ambil data user dari database
+$query = "SELECT * FROM users WHERE user_id = $user_id";
+$result = mysqli_query($conn, $query);
+$user = mysqli_fetch_assoc($result);
+
+// Proses pembaruan profil
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['change_password'])) {
+        // Handle password change
+        $current_password = mysqli_real_escape_string($conn, $_POST['current_password']);
+        $new_password = mysqli_real_escape_string($conn, $_POST['new_password']);
+        $repeat_new_password = mysqli_real_escape_string($conn, $_POST['repeat_new_password']);
+
+        // Check if current password matches the one in the database
+        if (password_verify($current_password, $user['password'])) {
+            // Check if new passwords match
+            if ($new_password === $repeat_new_password) {
+                // Hash the new password
+                $new_password_hashed = password_hash($new_password, PASSWORD_BCRYPT);
+
+                // Update the password in the database
+                $update_password_query = "UPDATE users SET password = '$new_password_hashed' WHERE user_id = $user_id";
+                if (mysqli_query($conn, $update_password_query)) {
+                    $_SESSION['message'] = "Password changed successfully!";
+                    header('Location: profile_admin.php');
+                    exit;
+                } else {
+                    echo "Error updating record: " . mysqli_error($conn);
+                }
+            } else {
+                echo "New passwords do not match!";
+            }
+        } else {
+            echo "Current password is incorrect!";
+        }
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="ADMIN 12/css/bootstrap.min.css" rel="stylesheet">
-    <link href="ADMIN 12/css/styles.css" rel="stylesheet"> <!-- Template Stylesheet -->
+    <title>Profile Admin</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
-        .card {
-            width: 350px; /* Kecilkan lebar card */
-            margin: 0 auto; /* Untuk membuat card berada di tengah */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan */
-            border-radius: 15px; /* Sudut yang lebih halus */
-            overflow: hidden; /* Pastikan elemen dalam kartu tidak keluar */
-            background-color: #f8f9fa; /* Warna latar belakang yang lebih cerah */
-        }
-        .card-body {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }   
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 10px;
         }
-        .info-label {
-            font-weight: bold;
+        .btn-custom {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        .card-body img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%; /* Membuat gambar profil berbentuk lingkaran */
-            border: 5px solid #fff; /* Tambahkan border putih di sekitar gambar */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan di gambar */
+        .btn-custom:hover {
+            background-color: #808080;
+            color: #fff;
+        }
+        .btn-custom-file {
+            outline: 10px;
+            border-color: #000;
+            color: #000000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-custom-file:hover {
+            background-color: #808080;
+            color: #fff;
+        }
+        .btn-custom:focus {
+            outline: none;
+        }
+        .btn-custom-cancel {
+            background-color: transparent;
+            color: #000;
+        }
+        .btn-custom-cancel:hover {
+            color: #808080;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">User Profile</h2>
-        <form action="user.php" method="post">
-        <div class="card">
-            <div class="card-body">
-                <!-- Profile Picture -->
-                <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture" class="rounded-circle mb-3">
-                
-                <h5 class="card-title text-center">Profile Information</h5>
-                
-                <div class="info-row">
-                    <span class="info-label">Username:</span>
-                    <span><?php echo htmlspecialchars($username); ?></span>
+    <div class="container light-style flex-grow-1 container-p-y">
+        <h4 class="font-weight-bold py-3 mb-4">
+            Account settings
+        </h4>
+        <div class="card overflow-hidden">
+            <div class="row no-gutters row-bordered row-border-light">
+                <div class="col-md-3 pt-0">
+                    <div class="list-group list-group-flush account-settings-links">
+                        <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general">General</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
+                    </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Nomer Hp:</span>
-                    <span><?php echo htmlspecialchars($hp); ?></span>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="account-general">
+                            <form action="update_profile.php" method="post" enctype="multipart/form-data">
+                                <div class="card-body media align-items-center">
+                                    <?php if ($user['foto']): ?>
+                                        <img src="<?= htmlspecialchars($user['foto']) ?>" alt="Foto Profil" class="img-thumbnail mt-2" width="150">
+                                    <?php endif; ?>
+                                    <div class="media-body ml-4">
+                                        <label class="btn btn-outline-dark">
+                                            Upload new photo
+                                            <input type="file" class="account-settings-fileinput" id="foto" name="foto">
+                                        </label> &nbsp;
+                                        <button type="button" class="btn btn-custom-cancel">Reset</button>
+                                        <div class="text-dark small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
+                                    </div>
+                                </div>
+                                <hr class="border-light m-0">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" class="form-control mb-1" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">E-mail</label>
+                                        <input type="text" class="form-control mb-1" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Alamat</label>
+                                        <input type="text" class="form-control mb-1" name="alamat" value="<?= htmlspecialchars($user['alamat']) ?>" required>
+                                    </div>
+                                    <h6 class="mb-4">Contacts</h6>
+                                    <div class="form-group">
+                                        <label class="form-label">Phone</label>
+                                        <input type="text" class="form-control" name="no_hp" value="<?= htmlspecialchars($user['no_hp']) ?>" required>
+                                    </div>
+                                    <input type="hidden" name="foto_lama" value="<?= htmlspecialchars($user['foto']) ?>">
+                                    <div class="text-right mt-3">
+                                        <button type="submit" class="btn btn-custom">Simpan Perubahan</button>&nbsp;
+                                        <a href="user.php" class="btn btn-custom-cancel">Kembali</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="account-change-password">
+                            <form action="update_profile.php" method="post">
+                                <div class="card-body pb-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Current password</label>
+                                        <input type="password" class="form-control" name="current_password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">New password</label>
+                                        <input type="password" class="form-control" name="new_password" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Repeat new password</label>
+                                        <input type="password" class="form-control" name="repeat_new_password" required>
+                                    </div>
+                                    <div class="text-right mt-3">
+                                        <button type="submit" name="change_password" class="btn btn-custom">Ganti Password</button>&nbsp;
+                                        <a href="user.php" class="btn btn-custom-cancel">Kembali</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="account-info">
+                            <div class="card-body pb-2">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Email:</span>
-                    <span><?php echo htmlspecialchars($email); ?></span>
-                </div>
-
-                <a href="edit_profile.php"class="btn btn-primary mt-2">Edit Profile</a>  
-            <a href="user.php"class="btn btn-secondary mt-2">Back</a>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-DzZdmsXrAwzP6M7zAd0IazKlPPLjHD4iF4x7jLME6tkeRJfFZQGK2vM9G5tBR1p" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

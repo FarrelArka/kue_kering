@@ -221,10 +221,6 @@ section {
     width: 100%;
 }
 
-.product .product-row .img img:hover {
-    transform: scale(1.1);
-}
-
 .product .product-row .content {
     margin-bottom: 4rem;
 }
@@ -238,6 +234,7 @@ section {
     font-size: 1.5rem;
     line-height: 1.6;
     color: var(--black);
+    text-align: justify;
 }
 
 .product .product-row .product-content .orderNow {

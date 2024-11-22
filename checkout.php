@@ -42,18 +42,19 @@ foreach ($cart_data as $item) {
 if (isset($_POST['proceed_payment'])) {
     $payment_method = $_POST['payment_method'] ?? 'cod';
     $transfer_method = $_POST['transfer_method'] ?? null;
+    $use_points = isset($_POST['apply_points']); // Cek jika poin akan digunakan
 
-    $discount = min($total, $poin);
-    $remaining_poin = max(0, $poin - $total);
-    $total_final = $total - $discount;
+    // Hitung diskon berdasarkan pilihan pengguna
+    $discount = $use_points ? min($total, $poin) : 0; // Terapkan diskon jika menggunakan poin
+    $total_final = $total - $discount; // Total akhir setelah diskon
 
     // Mulai transaksi
     $conn->begin_transaction();
 
     try {
         // Insert data ke tabel transaction
-        $status = 'pending'; // Status awal transaksi
-        $transaction_query = "INSERT INTO `transaction` (user_id, payment_method, total_bayar, status, discount) VALUES (?, ?, ?, ?, ?)";
+        $status = $payment_method === 'cod' ? 'Belum Bayar' : 'Sudah Bayar'; // Status awal transaksi
+        $transaction_query = "INSERT INTO transaction (user_id, payment_method, total_bayar, status, discount) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($transaction_query);
         $stmt->bind_param("isisi", $user_id, $payment_method, $total_final, $status, $discount);
         $stmt->execute();
@@ -75,7 +76,7 @@ if (isset($_POST['proceed_payment'])) {
             $stmt->execute();
 
             // Masukkan detail transaksi ke tabel detail_transaction
-            $detail_query = "INSERT INTO `detail_transaction` (transaction_id, product_id, quantity, total_bayar) VALUES (?, ?, ?, ?)";
+            $detail_query = "INSERT INTO detail_transaction (transaction_id, product_id, quantity, total_bayar) VALUES (?, ?, ?, ?)";
             $stmt = $conn->prepare($detail_query);
             $stmt->bind_param("iiii", $transaction_id, $product_id, $quantity, $total_item);
             $stmt->execute();
@@ -83,6 +84,7 @@ if (isset($_POST['proceed_payment'])) {
 
         // Update poin pengguna
         $update_poin_query = "UPDATE point SET point = ? WHERE user_id = ?";
+        $remaining_poin = max(0, $poin - $discount); // Hitung sisa poin
         $stmt = $conn->prepare($update_poin_query);
         $stmt->bind_param("ii", $remaining_poin, $user_id);
         $stmt->execute();
@@ -92,7 +94,11 @@ if (isset($_POST['proceed_payment'])) {
         $add_poin_query = "UPDATE point SET point = point + ? WHERE user_id = ?";
         $stmt = $conn->prepare($add_poin_query);
         $stmt->bind_param("ii", $new_points, $user_id);
-        $stmt->execute();
+
+        // Cek apakah update poin berhasil
+        if (!$stmt->execute()) {
+            echo "Error updating points: " . $stmt->error;
+        }
 
         // Commit transaksi
         $conn->commit();
@@ -123,6 +129,7 @@ if (isset($_POST['proceed_payment'])) {
 
             $snapToken = \Midtrans\Snap::getSnapToken($params);
             $_SESSION['snapToken'] = $snapToken;
+
             header("Location: cart.php");
             exit();
         } else {
@@ -131,7 +138,6 @@ if (isset($_POST['proceed_payment'])) {
             header("Location: order.php");
             exit();
         }
-
     } catch (Exception $e) {
         $conn->rollback();
         echo "Checkout gagal: " . $e->getMessage();

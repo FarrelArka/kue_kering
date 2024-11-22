@@ -17,6 +17,11 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
+if (isset($_SESSION['alert_message'])) {
+    $alert_message = $_SESSION['alert_message'];
+    echo "<script>alert('$alert_message');</script>";
+    unset($_SESSION['alert_message']);
+}
 
 // Cek apakah data pengguna ditemukan
 if ($data = $result->fetch_assoc()) {
@@ -37,7 +42,7 @@ if ($data = $result->fetch_assoc()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="usersss.css">
+    <link rel="stylesheet" href="pengguna.css">
     <style>
         /* CSS untuk dropdown profil */
         .profile {
@@ -59,6 +64,7 @@ if ($data = $result->fetch_assoc()) {
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
         }
+       
 
         .dropdown-content a {
             color: black;
@@ -77,6 +83,48 @@ if ($data = $result->fetch_assoc()) {
         .profile:hover .dropdown-content {
             display: block;
         }
+        
+        /* Swiper container and slide styles */
+        .swiper {
+            width: 100%;
+            padding: 2px 0;
+        }
+
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 550px; /* Adjust height as needed */
+            background: #fff;
+
+            border-radius: 10px;
+           
+        }
+
+        .swiper-slide .img {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swiper-slide .img img {
+            max-height: 100%;
+            border-bottom: 1px solid #eee;
+        }
+
+        .swiper-slide .product-content {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .swiper-slide .orderNow {
+            margin-top: auto;
+        }
+
+    
     </style>
 </head>
 <body>

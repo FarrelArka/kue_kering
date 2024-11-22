@@ -75,8 +75,8 @@ if ($data = $result->fetch_assoc()) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="order.css">
-<style>
-            .profile {
+    <style>
+        .profile {
             position: relative;
             display: inline-block;
         }
@@ -113,43 +113,60 @@ if ($data = $result->fetch_assoc()) {
         .profile:hover .dropdown-content {
             display: block;
         }
+
         .cancel-button {
-    background-color: #292929;
-    font-weight: 500;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-}
+            background-color: #292929;
+            font-weight: 500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            position: absolute;
+            top: 75px;
+            right: 35px;
+        }
 
-.cancel-button:hover {
-    background-color: #757575;
-}
-.order-item {
-    position: relative;
-    padding: 20px;
-    border: 1px solid #ccc;
-    margin-bottom: 20px;
-    border-radius: 10px;
-}   
-.delete-button {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    color: black;
-}
+        .cancel-button:hover {
+            background-color: #757575;
+        }
 
-.delete-button:hover {
-    color: #757575;
-}
+        .order-item {
+            position: relative;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
 
-</style>
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 60px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: black;
+        }
+
+        .delete-button:hover {
+            color: #757575;
+        }
+
+        .order-images {
+            display: flex;
+            gap: 10px;
+        }
+
+        .order-images img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+    </style>
    
 </head>
 <body>
@@ -201,12 +218,17 @@ if ($data = $result->fetch_assoc()) {
                 <img src="images/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" class="order-image">
             <?php } ?>
         </div>
+        <form action="cancel_order.php" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+            <input type="hidden" name="transaction_id" value="<?php echo $transaction_id; ?>">
+            <button type="submit" class="cancel-button">Cancel Order</button>
+        </form>
         <!-- Delete Order Button -->
-        <?php if ($order['status'] === 'selesai' || $order['status'] === 'cancelled') { // Check if the order is completed or cancelled ?>
+        <?php if ($order['status'] === 'Selesai' || $order['status'] === 'Cancelled') { // Check if the order is completed or cancelled ?>
             <form action="delete_order.php" method="post" onsubmit="return confirm('Are you sure you want to delete this order?');" style="display:inline;">
                 <input type="hidden" name="transaction_id" value="<?php echo $transaction_id; ?>">
                 <button type="submit" class="delete-button">✖</button>
             </form>
+            
         <?php } ?>
     </div>
 <?php } ?>
@@ -234,10 +256,7 @@ if ($data = $result->fetch_assoc()) {
         <?php } ?>
         <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
         <!-- Cancel Order Button -->
-        <form action="cancel_order.php" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
-            <input type="hidden" name="transaction_id" value="<?php echo $transaction_id; ?>">
-            <button type="submit" class="cancel-button">Cancel Order</button>
-        </form>
+        
     </div>
 </div>
 <?php } ?>

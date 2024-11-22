@@ -20,12 +20,14 @@ if (isset($_POST['add_to_cart'])) {
             $stmt = $conn->prepare($update_query);
             $stmt->bind_param("ii", $user_id, $product_id);
             $stmt->execute();
+            $_SESSION['alert_message'] = "Produk berhasil ditambahkan ke keranjang.";
         } else {
             // Jika produk belum ada di cart, tambahkan ke cart dengan kuantitas 1
             $insert_query = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, 1)";
             $stmt = $conn->prepare($insert_query);
             $stmt->bind_param("ii", $user_id, $product_id);
             $stmt->execute();
+            $_SESSION['alert_message'] = "Produk baru berhasil ditambahkan ke keranjang.";
         }
         header('location:user.php');
     } else {

@@ -128,20 +128,20 @@ if ($conn->connect_error) {
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Manage Transactions</h6>
+                        <h6 class="mb-0">Daftar Transaksi</h6>
                     </div>
                     <div class="table-responsive">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-dark">
-                                    <th scope="col">Transaction ID</th>
-                                    <th scope="col">User ID</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Payment Method</th>
-                                    <th scope="col">Total Payment</th>
+                                    <th scope="col">ID Transaksi</th>
+                                    <th scope="col">ID Pengguna</th>
+                                    <th scope="col">Tanggal</th>
+                                    <th scope="col">Metode Pembayaran</th>
+                                    <th scope="col">Total Pembayaran</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Discount</th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col">Diskon</th>
+                                    <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -159,9 +159,11 @@ if ($conn->connect_error) {
                                                 <form action='ADMIN 12/update_order.php' method='POST'>
                                                     <input type='hidden' name='transaction_id' value='".$row['transaction_id']."'>
                                                     <select class='form-select' name='status' onchange='this.form.submit()'>
-                                                        <option value='pending' ".($row['status'] === 'pending' ? 'selected' : '').">Pending</option>
-                                                        <option value='completed' ".($row['status'] === 'completed' ? 'selected' : '').">Completed</option>
-                                                        <option value='cancelled' ".($row['status'] === 'cancelled' ? 'selected' : '').">Cancelled</option>
+                                                        <option value='pending' ".($row['status'] === 'Sudah Bayar' ? 'selected' : '').">Sudah Bayar</option>
+                                                        <option value='completed' ".($row['status'] === 'Belum Bayar' ? 'selected' : '').">Belum Bayar</option>
+                                                        <option value='cancelled' ".($row['status'] === 'Proses' ? 'selected' : '').">Proses</option>
+                                                        <option value='cancelled' ".($row['status'] === 'Selesai' ? 'selected' : '').">Selesai</option>
+                                                        <option value='cancelled' ".($row['status'] === 'Cancelled' ? 'selected' : '').">Cancelled</option>
                                                     </select>
                                                 </form>
                                               </td>";

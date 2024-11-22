@@ -73,6 +73,46 @@ if ($data = $result->fetch_assoc()) {
         .profile:hover .dropdown-content {
             display: block;
         }
+        .swiper {
+            width: 100%;
+            padding: 2px 0;
+        }
+
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 550px; /* Adjust height as needed */
+            background: #fff;
+
+            border-radius: 10px;
+           
+        }
+
+        .swiper-slide .img {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swiper-slide .img img {
+            max-height: 100%;
+            border-bottom: 1px solid #eee;
+        }
+
+        .swiper-slide .product-content {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .swiper-slide .orderNow {
+            margin-top: auto;
+        }
+
+    
     </style>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="belis.css">
